@@ -1,6 +1,7 @@
 import pandas as pd
 import string
 
+
 def read_excel_file(file_path="./data/15000.xlsx"):
     # Read the Excel file into a DataFrame
     df = pd.read_excel(file_path)
