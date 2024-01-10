@@ -39,6 +39,7 @@ def count_words_in_cell(cell_value):
     words = cell_value.split()
     return len(words)
 
+
 def get_cells_in_range(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
     # Read Excel file using pandas
     df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
@@ -58,49 +59,10 @@ def get_cells_in_range(excel_file_path, sheet_name, start_row, end_row, column_i
 
     # Write the new DataFrame to a new Excel file
     result_df.to_excel(output_excel_path, index=False)
-#---------------------------------------------------------------------------------------------------------------
-# def count_words_in_cell(cell_value):
-#     # Count the number of words in a cell
-#     words = cell_value.split()
-#     return len(words)
-#
-# def get_cells_in_range(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
-#     # Read Excel file using pandas
-#     df = pd.read_excel(excel_file_path, sheet_name=sheet_name, header=None)
-#
-#     # Iterate through the specified range and count words in each cell
-#     for index, row in df.iloc[start_row-1:end_row].iterrows():
-#         cell_value = row[column_index]
-#         word_count = count_words_in_cell(str(cell_value))
-#         df.at[index, column_index-1] = word_count
-#
-#     # Write the updated DataFrame to a new Excel file
-#     df.to_excel(output_excel_path, index=False)
-#---------------------------------------------------------------------------------------------------------------
-# def get_cells_in_range(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
-#     # Read the Excel file into a DataFrame
-#     df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
-#
-#     # Ensure that start_row and end_row are within the DataFrame's range
-#     start_row = max(0, start_row - 1)
-#     end_row = min(end_row, len(df))
-#
-#     # Extract the specified range of rows and the specified column
-#     selected_data = df.iloc[start_row:end_row, column_index]
-#
-#     # Count the number of words in each cell and store the result in a new column
-#     selected_data['Word Count'] = selected_data.apply(lambda cell: len(str(cell).split()))
-#
-#     # Save the updated DataFrame to a new Excel file
-#     selected_data.to_excel(output_excel_path, index=False)
-#---------------------------------------------------------------------------------------------------------------
-
-
 
 
 def c(w, d):
     return d.count(w)
-
 
 
 def main():
@@ -109,6 +71,8 @@ def main():
     # C_frequency_result = get_cells_in_range(FILE_PATH, SHEET, C_START, C_FINISH, CONTENT_COL, C_OUTPUT_PATH)
 
     get_cells_in_range(FILE_PATH, SHEET, A_START, A_FINISH, CONTENT_COL, A_LEN_OUTPUT_PATH)
+    get_cells_in_range(FILE_PATH, SHEET, B_START, B_FINISH, CONTENT_COL, B_LEN_OUTPUT_PATH)
+    get_cells_in_range(FILE_PATH, SHEET, C_START, C_FINISH, CONTENT_COL, C_LEN_OUTPUT_PATH)
 
     print("Word frequency in the specified range:")
 
