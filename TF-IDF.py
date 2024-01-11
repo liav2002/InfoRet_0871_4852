@@ -21,6 +21,7 @@ C_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\C_CLEAN_VOCA.xlsx"
 A_LEN_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\A_CLEAN_LEN.xlsx"
 B_LEN_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\B_CLEAN_LEN.xlsx"
 C_LEN_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\C_CLEAN_LEN.xlsx"
+METRIX_A_PATH = "C:\\Users\\nehor\\Downloads\\METRIX_A.xlsx"
 
 
 def get_cells_in_range(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
@@ -65,15 +66,60 @@ def c(w, d):
     return d.count(w)
 
 
+def create_matrix(file1_path, file2_path):
+    # Read the Excel file into a DataFrame
+    df1 = pd.read_excel(file1_path)
+
+    # Extract only the "Word" column without the index
+    words_to_copy = df1["Word"].iloc[0:].tolist()
+
+    # Create a new DataFrame with the values to copy in the first column and second row
+    new_df = pd.DataFrame({"Word": words_to_copy})
+
+    # Read the Excel file into a DataFrame
+    df2 = pd.read_excel(file2_path)
+
+    # Remove the column named "paragraph number of words"
+    df2 = df2.drop("paragraph number of words", axis=1)
+
+    # Transpose the DataFrame
+    df_transposed = df2.T.reset_index()
+
+    df_transposed.to_excel("C:\\Users\\nehor\\Downloads\\ID.xlsx", header=None, index=False)
+
+    new_df.to_excel("C:\\Users\\nehor\\Downloads\\WORD.xlsx", header=None, index=False)
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def excel_column_to_list(excel_file):
+    # Read the Excel file into a pandas DataFrame
+    df = pd.read_excel(excel_file)
+
+    # Extract the values from the first column (assuming it's the index 0)
+    first_column_values = df.iloc[:, 0].tolist()
+
+    return first_column_values
+
+    # # Merge on the "Word" column
+    # merged_df = pd.merge(new_df, df_transposed, left_on='Word', right_on='index')
+    #
+    # # Drop unnecessary columns
+    # merged_df = merged_df.drop(columns=['Word', 'index'])
+    #
+    # # Write the merged DataFrame to a new Excel file
+    # merged_df.to_excel(output_path, header=None, index=False)
+
 def main():
     # A_frequency_result = get_cells_in_range(FILE_PATH, SHEET, A_START, A_FINISH, CONTENT_COL, A_OUTPUT_PATH)
     # B_frequency_result = get_cells_in_range(FILE_PATH, SHEET, B_START, B_FINISH, CONTENT_COL, B_OUTPUT_PATH)
     # C_frequency_result = get_cells_in_range(FILE_PATH, SHEET, C_START, C_FINISH, CONTENT_COL, C_OUTPUT_PATH)
 
-    get_cells_in_range(FILE_PATH, SHEET, A_START, A_FINISH, CONTENT_COL, A_LEN_OUTPUT_PATH)
-    get_cells_in_range(FILE_PATH, SHEET, B_START, B_FINISH, CONTENT_COL, B_LEN_OUTPUT_PATH)
-    get_cells_in_range(FILE_PATH, SHEET, C_START, C_FINISH, CONTENT_COL, C_LEN_OUTPUT_PATH)
+    # get_cells_in_range(FILE_PATH, SHEET, A_START, A_FINISH, CONTENT_COL, A_LEN_OUTPUT_PATH)
+    # get_cells_in_range(FILE_PATH, SHEET, B_START, B_FINISH, CONTENT_COL, B_LEN_OUTPUT_PATH)
+    # get_cells_in_range(FILE_PATH, SHEET, C_START, C_FINISH, CONTENT_COL, C_LEN_OUTPUT_PATH)
 
+    create_matrix(B_OUTPUT_PATH, B_LEN_OUTPUT_PATH)
+    print(len(excel_column_to_list("C:\\Users\\nehor\\Downloads\\WORD.xlsx")))
+    print("--------")
+    print(excel_column_to_list("C:\\Users\\nehor\\Downloads\\WORD.xlsx"))
     print("Word frequency in the specified range:")
 
 
