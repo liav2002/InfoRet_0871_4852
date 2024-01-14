@@ -5,6 +5,7 @@ import openpyxl
 from openpyxl import load_workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 
+
 CONTENT_COL  = 2
 ID_COL = 1
 A_START = 2
@@ -88,24 +89,40 @@ def create_matrix(file1_path, file2_path):
     df_transposed.to_excel("C:\\Users\\nehor\\Downloads\\ID.xlsx", header=None, index=False)
 
     new_df.to_excel("C:\\Users\\nehor\\Downloads\\WORD.xlsx", header=None, index=False)
-    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 def excel_column_to_list(excel_file):
-    # Read the Excel file into a pandas DataFrame
     df = pd.read_excel(excel_file)
-
-    # Extract the values from the first column (assuming it's the index 0)
     first_column_values = df.iloc[:, 0].tolist()
-
     return first_column_values
 
-    # # Merge on the "Word" column
-    # merged_df = pd.merge(new_df, df_transposed, left_on='Word', right_on='index')
-    #
-    # # Drop unnecessary columns
-    # merged_df = merged_df.drop(columns=['Word', 'index'])
-    #
-    # # Write the merged DataFrame to a new Excel file
-    # merged_df.to_excel(output_path, header=None, index=False)
+
+def list_of_words(X_OUTPUT_PATH, X_LEN_OUTPUT_PATH, input_string):
+    create_matrix(X_OUTPUT_PATH, X_LEN_OUTPUT_PATH)
+    word_list = excel_column_to_list("C:\\Users\\nehor\\Downloads\\WORD.xlsx")
+    word_counts = {}
+    for word in word_list:
+        count = input_string.split().count(word)
+        word_counts[word] = count
+    return word_counts
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH):
+    all_words = excel_column_to_list(X_OUTPUT_PATH)
+    all_IDs = excel_column_to_list(X_LEN_OUTPUT_PATH)
+    return  all_IDs, all_words
+
+def create_vec(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, DOCS_PATH, doc_id):
+    all_IDs, all_words = get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH)
+    df = pd.read_excel(DOCS_PATH)
+    # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
+    df = df.drop(columns=[df.columns[0], df.columns[3]])
+    if doc_id in df['מזהה/מספר הקובץ'].values:
+        # Get the corresponding value in the "תוכן הקובץ" column
+        content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'תוכן הקובץ'].iloc[0]
+    print(content_value)
+
+
+
 
 def main():
     # A_frequency_result = get_cells_in_range(FILE_PATH, SHEET, A_START, A_FINISH, CONTENT_COL, A_OUTPUT_PATH)
@@ -116,10 +133,8 @@ def main():
     # get_cells_in_range(FILE_PATH, SHEET, B_START, B_FINISH, CONTENT_COL, B_LEN_OUTPUT_PATH)
     # get_cells_in_range(FILE_PATH, SHEET, C_START, C_FINISH, CONTENT_COL, C_LEN_OUTPUT_PATH)
 
-    create_matrix(B_OUTPUT_PATH, B_LEN_OUTPUT_PATH)
-    print(len(excel_column_to_list("C:\\Users\\nehor\\Downloads\\WORD.xlsx")))
-    print("--------")
-    print(excel_column_to_list("C:\\Users\\nehor\\Downloads\\WORD.xlsx"))
+    # x= list_of_words(A_OUTPUT_PATH, A_LEN_OUTPUT_PATH, ". אלו הן רק חלק קטן מהבעיות שאיתם תאלץ להתמודד הממשלה החדשה ")
+    create_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, 1461289)
     print("Word frequency in the specified range:")
 
 
