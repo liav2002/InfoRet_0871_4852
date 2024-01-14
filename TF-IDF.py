@@ -149,9 +149,11 @@ def main():
     # x= list_of_words(A_OUTPUT_PATH, A_LEN_OUTPUT_PATH, ". אלו הן רק חלק קטן מהבעיות שאיתם תאלץ להתמודד הממשלה החדשה ")
     # create_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, 1461289)
 
-    in_how_many_docs_the_word_appear(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\A_in_how_many_docs_the_word_appear.xlsx")
-    in_how_many_docs_the_word_appear(B_LEN_OUTPUT_PATH, B_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\B_in_how_many_docs_the_word_appear.xlsx")
-    in_how_many_docs_the_word_appear(C_LEN_OUTPUT_PATH, C_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\C_in_how_many_docs_the_word_appear.xlsx")
+    # in_how_many_docs_the_word_appear(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\A_in_how_many_docs_the_word_appear.xlsx")
+    # in_how_many_docs_the_word_appear(B_LEN_OUTPUT_PATH, B_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\B_in_how_many_docs_the_word_appear.xlsx")
+    # in_how_many_docs_the_word_appear(C_LEN_OUTPUT_PATH, C_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\C_in_how_many_docs_the_word_appear.xlsx")
+
+    
     print("Word frequency in the specified range:")
 
 
