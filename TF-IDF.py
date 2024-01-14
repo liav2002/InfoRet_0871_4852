@@ -105,23 +105,34 @@ def list_of_words(X_OUTPUT_PATH, X_LEN_OUTPUT_PATH, input_string):
         word_counts[word] = count
     return word_counts
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 def get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH):
     all_words = excel_column_to_list(X_OUTPUT_PATH)
     all_IDs = excel_column_to_list(X_LEN_OUTPUT_PATH)
     return  all_IDs, all_words
 
-def create_vec(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, DOCS_PATH, doc_id):
+
+def in_how_many_docs_the_word_appear(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, DOCS_PATH, output_path):
     all_IDs, all_words = get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH)
     df = pd.read_excel(DOCS_PATH)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
     df = df.drop(columns=[df.columns[0], df.columns[3]])
-    if doc_id in df['מזהה/מספר הקובץ'].values:
-        # Get the corresponding value in the "תוכן הקובץ" column
-        content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'תוכן הקובץ'].iloc[0]
-    print(content_value)
+    words_dict = dict.fromkeys(all_words, 0)
+    for doc_id in all_IDs:
+        if doc_id in df['מזהה/מספר הקובץ'].values:
+            # Get the corresponding value in the "תוכן הקובץ" column
+            content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'תוכן הקובץ'].iloc[0]
+            doc_as_list = content_value.split()
+            #current_doc_dict =
+            for word in doc_as_list:
+                words_dict[word] = words_dict[word] + 1
 
+    df = pd.DataFrame(list(words_dict.items()), columns=['Word', 'Count'])
+    df.to_excel(output_path, index=False)
 
+def list_to_dict(input_list):
+    # Using dict.fromkeys to create a dictionary with default values (None)
+    result_dict = dict.fromkeys(input_list, 0)
+    return result_dict
 
 
 def main():
@@ -134,7 +145,9 @@ def main():
     # get_cells_in_range(FILE_PATH, SHEET, C_START, C_FINISH, CONTENT_COL, C_LEN_OUTPUT_PATH)
 
     # x= list_of_words(A_OUTPUT_PATH, A_LEN_OUTPUT_PATH, ". אלו הן רק חלק קטן מהבעיות שאיתם תאלץ להתמודד הממשלה החדשה ")
-    create_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, 1461289)
+    # create_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, 1461289)
+
+    in_how_many_docs_the_word_appear(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\in_how_many_docs_the_word_appear.xlsx")
     print("Word frequency in the specified range:")
 
 
