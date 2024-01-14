@@ -122,9 +122,11 @@ def in_how_many_docs_the_word_appear(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, DOCS_PATH
             # Get the corresponding value in the "תוכן הקובץ" column
             content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'תוכן הקובץ'].iloc[0]
             doc_as_list = content_value.split()
-            #current_doc_dict =
+            current_doc_dict = dict.fromkeys(doc_as_list, 0)
             for word in doc_as_list:
-                words_dict[word] = words_dict[word] + 1
+                if current_doc_dict[word] == 0:
+                    words_dict[word] = words_dict[word] + 1
+                    current_doc_dict[word] = 1
 
     df = pd.DataFrame(list(words_dict.items()), columns=['Word', 'Count'])
     df.to_excel(output_path, index=False)
