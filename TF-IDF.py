@@ -1,9 +1,9 @@
 import pandas as pd
 from collections import Counter
+import numpy as np
 import string
-import openpyxl
-from openpyxl import load_workbook
-from openpyxl.utils.dataframe import dataframe_to_rows
+from scipy.sparse import csr_matrix
+from scipy.sparse import coo_matrix
 
 
 CONTENT_COL  = 2
@@ -104,7 +104,8 @@ def list_of_words(X_OUTPUT_PATH, X_LEN_OUTPUT_PATH, input_string):
         count = input_string.split().count(word)
         word_counts[word] = count
     return word_counts
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 def get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH):
     all_words = excel_column_to_list(X_OUTPUT_PATH)
     all_IDs = excel_column_to_list(X_LEN_OUTPUT_PATH)
@@ -137,6 +138,54 @@ def list_to_dict(input_list):
     return result_dict
 
 
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def create_all_vec(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, DOCS_PATH, output_path):
+    all_IDs, all_words = get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH)
+    df = pd.read_excel(DOCS_PATH)
+    # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
+    df = df.drop(columns=[df.columns[0], df.columns[3]])
+    ids_dict = {doc_id: {} for doc_id in all_IDs}
+    for doc_id in all_IDs:
+        if doc_id in df['מזהה/מספר הקובץ'].values:
+            # Get the corresponding value in the "תוכן הקובץ" column
+            content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'תוכן הקובץ'].iloc[0]
+            doc_as_list = content_value.split()
+            for word in doc_as_list:
+                if word in ids_dict[doc_id]:
+                    ids_dict[doc_id][word] += 1
+                else:
+                    ids_dict[doc_id][word] = 1
+    return ids_dict
+
+
+def create_nested_dict(external_list, inner_list):
+    nested_dict = {}
+    for key in external_list:
+        nested_dict[key] = {inner_key: None for inner_key in inner_list}
+    return nested_dict
+
+
+def create_sparse_matrix(external_list, inner_list):
+    # Convert inner_list string to a list of integers
+    inner_indices = inner_list
+
+    # Example logic to determine data values (replace with your logic)
+    data = [1] * min(len(external_list), len(inner_indices))
+
+    # Determine the minimum length to avoid IndexError
+    min_length = min(len(external_list), len(inner_indices))
+
+    # Pad or truncate the longer list to the minimum length
+    truncated_external_list = external_list[:min_length]
+    truncated_inner_indices = inner_indices[:min_length]
+
+    # Create the COO matrix directly
+    sparse_matrix = coo_matrix((data, (truncated_external_list, truncated_inner_indices)),
+                               shape=(len(external_list), len(inner_indices)))
+
+    return sparse_matrix
+
+
 def main():
     # A_frequency_result = get_cells_in_range(FILE_PATH, SHEET, A_START, A_FINISH, CONTENT_COL, A_OUTPUT_PATH)
     # B_frequency_result = get_cells_in_range(FILE_PATH, SHEET, B_START, B_FINISH, CONTENT_COL, B_OUTPUT_PATH)
@@ -153,7 +202,8 @@ def main():
     # in_how_many_docs_the_word_appear(B_LEN_OUTPUT_PATH, B_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\B_in_how_many_docs_the_word_appear.xlsx")
     # in_how_many_docs_the_word_appear(C_LEN_OUTPUT_PATH, C_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\C_in_how_many_docs_the_word_appear.xlsx")
 
-    
+    ids_dict = create_all_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\A_draft.xlsx")
+    print(ids_dict)
     print("Word frequency in the specified range:")
 
 
