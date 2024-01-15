@@ -89,28 +89,30 @@ def create_json_file(df, output_path):
 
 
 def main():
-    # Create doc vectors from data without punctuations and stop-words.
-    # if all_files_exist([DCPS_A_PATH, DCPS_B_PATH, DCPS_C_PATH]):
-    #     print("Creating document's vectors from DCPS_DATA using Word2Vec.")
-    #
-    #     # Load DataFrames
-    #     df_A = pd.read_excel(DCPS_A_PATH)
-    #     df_B = pd.read_excel(DCPS_B_PATH)
-    #     df_C = pd.read_excel(DCPS_C_PATH)
-    #
-    #     # Create JSON files for each group
-    #     print("Working on group A")
-    #     sleep(0.1)
-    #     create_json_file(df_A, OUTPUT_DCPS_A)
-    #     print("Working on group B")
-    #     sleep(0.1)
-    #     create_json_file(df_B, OUTPUT_DCPS_B)
-    #     sleep(0.1)
-    #     print("Working on group C")
-    #     create_json_file(df_C, OUTPUT_DCPS_C)
+    # Create doc vectors from data without punctuations and without stop-words.
+    if all_files_exist([DCPS_A_PATH, DCPS_B_PATH, DCPS_C_PATH]) and not all_files_exist(
+            [OUTPUT_DCPS_A, OUTPUT_DCPS_B, OUTPUT_DCPS_C]):
+        print("Creating document's vectors from DCPS_DATA using Word2Vec.")
 
-    # Create doc vectors from data without punctuations.
-    if all_files_exist([DCP_A_PATH, DCP_B_PATH, DCP_C_PATH]):
+        # Load DataFrames
+        df_A = pd.read_excel(DCPS_A_PATH)
+        df_B = pd.read_excel(DCPS_B_PATH)
+        df_C = pd.read_excel(DCPS_C_PATH)
+
+        # Create JSON files for each group
+        print("Working on group A")
+        sleep(0.1)
+        create_json_file(df_A, OUTPUT_DCPS_A)
+        print("Working on group B")
+        sleep(0.1)
+        create_json_file(df_B, OUTPUT_DCPS_B)
+        sleep(0.1)
+        print("Working on group C")
+        create_json_file(df_C, OUTPUT_DCPS_C)
+
+    # Create doc vectors from data without punctuations (but with stop-words).
+    if all_files_exist([DCP_A_PATH, DCP_B_PATH, DCP_C_PATH]) and not all_files_exist(
+            [OUTPUT_DCP_A, OUTPUT_DCP_B, OUTPUT_DCP_C]):
         print("Creating document's vectors from DCP_DATA using Word2Vec.")
 
         # Load DataFrames
@@ -129,8 +131,9 @@ def main():
         sleep(0.1)
         create_json_file(df_C, OUTPUT_DCP_C)
 
-    # Create doc vectors from data with lemot.
-    if all_files_exist([DWLO_A_PATH, DWLO_B_PATH, DWLO_C_PATH]):
+    # Create doc vectors from data with lemot only.
+    if all_files_exist([DWLO_A_PATH, DWLO_B_PATH, DWLO_C_PATH]) and not all_files_exist(
+            [OUTPUT_DWLO_A, OUTPUT_DWLO_B, OUTPUT_DWLO_C]):
         print("Creating document's vectors from DWLO_DATA using Word2Vec.")
 
         # Load DataFrames
