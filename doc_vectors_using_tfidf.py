@@ -109,18 +109,18 @@ def list_to_dict(input_list):
     return result_dict
 
 
-def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH, X_CLEAN_MATRIX):
+def get_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DCPS_X_PATH, OUTPUT_X_EXCEL):
     all_IDs, all_words = get_IDs_and_words(X_CLEAN_LEN, X_CLEAN_VOCA)
-    df = pd.read_excel(DOCS_PATH)
+    df = pd.read_excel(DCPS_X_PATH)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
-    df = df.drop(columns=[df.columns[0], df.columns[3]])
+    df = df.drop(columns=[df.columns[0]])
     avgl = get_avgl(X_CLEAN_LEN, all_IDs)
     ids_dict = {doc_id: {} for doc_id in all_IDs}
     appearances_dict = excel_to_dict(X_APPEARANCES)
     for doc_id in all_IDs:
-        if doc_id in df['מזהה/מספר הקובץ'].values:
+        if doc_id in df['file_id'].values:
             # Get the corresponding value in the "תוכן הקובץ" column
-            content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'תוכן הקובץ'].iloc[0]
+            content_value = df.loc[df['file_id'] == doc_id, 'content'].iloc[0]
             doc_as_list = content_value.split()
             # first iteration for "Doc frequency" (how many instances of any words exist in the current doc)
             for word in doc_as_list:
@@ -144,17 +144,21 @@ def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH, X_CLEAN
                 # ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
 
 
-    #++++++++++++++++++++++++++++++++++++++ More RAM request ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # df_matrix = pd.DataFrame.from_dict(ids_dict, orient='index')
     # # Transpose the DataFrame
     # df_transposed = df_matrix.transpose()
     # # Write transposed DataFrame to Excel file
-    # df_transposed.to_excel(X_CLEAN_MATRIX, index=True)
-    #++++++++++++++++++++++++++++++++++++++ More RAM request ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # df_transposed.to_excel(OUTPUT_X_EXCEL, index=True)
+    # return ids_dict
+    # ++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    df = pd.DataFrame(list(ids_dict.items()), columns=['ID', 'Value'])
-    df.to_excel(X_CLEAN_MATRIX, index=False)
+    #++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    df = pd.DataFrame(list(ids_dict.items()), columns=['file_id', 'content'])
+    df.to_excel(OUTPUT_X_EXCEL, index=False)
     return ids_dict
+    #++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 
 def create_nested_dict(external_list, inner_list):
@@ -168,9 +172,9 @@ def get_avgl(X_CLEAN_LEN, all_IDs):
     sum = 0
     df = pd.read_excel(X_CLEAN_LEN)
     for doc_id in all_IDs:
-        if doc_id in df['מזהה/מספר הקובץ'].values:
+        if doc_id in df['file_id'].values:
             # Get the corresponding value in the "תוכן הקובץ" column
-            content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'paragraph number of words'].iloc[0]
+            content_value = df.loc[df['file_id'] == doc_id, 'paragraph number of words'].iloc[0]
             sum = sum + content_value
     return sum/(len(all_IDs))
 
@@ -198,12 +202,10 @@ def main():
     # get_appearances(B_CLEAN_LEN, B_CLEAN_VOCA, DCPS_B_PATH, B_CLEAN_APPEARANCES)
     # get_appearances(C_CLEAN_LEN, C_CLEAN_VOCA, DCPS_C_PATH, C_CLEAN_APPEARANCES)
 
-    # ids_dict = create_all_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, CLEAN_15000, A_CLEAN_MATRIX)
-    # print(ids_dict[1461014])
-    # ids_dict = create_all_vec(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, CLEAN_15000, B_CLEAN_MATRIX)
-    # print(ids_dict[2592098])
-    # ids_dict = create_all_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, CLEAN_15000, C_CLEAN_MATRIX)
-    # print(ids_dict[3036697])
+    # try run with the recommended option in get_vec().
+    vec = get_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, DCPS_A_PATH, OUTPUT_A_EXCEL)
+    vec = get_vec(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, DCPS_B_PATH, OUTPUT_B_EXCEL)
+    vec = get_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, DCPS_C_PATH, OUTPUT_C_EXCEL)
 
     print("+++++finish+++++")
 
