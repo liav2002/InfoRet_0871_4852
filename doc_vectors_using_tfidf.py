@@ -52,22 +52,22 @@ def count_words_in_cell(cell_value):
     return len(words)
 
 
-def get_len(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
+def get_len(DCPS_X_PATH, X_CLEAN_LEN):
     # Read Excel file using pandas
-    df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
+    df = pd.read_excel(DCPS_X_PATH)
     # Create a new DataFrame with only the required columns
-    result_df = pd.DataFrame(columns=["מזהה/מספר הקובץ", "paragraph number of words"])
-    # Iterate through the specified range and count words in each cell
-    for index, row in df.iloc[start_row - 2:end_row - 1].iterrows():
-        paragraph_id = row["מזהה/מספר הקובץ"]
-        cell_value = row["תוכן הקובץ"]
-        word_count = count_words_in_cell(str(cell_value))
+    result_df = pd.DataFrame(columns=["file_id", "paragraph number of words"])
+    # Iterate through the DataFrame and count words in each cell
+    for index, row in df.iterrows():
+        paragraph_id = row["file_id"]
+        cell_value = row["content"]
+        word_count = count_words_in_cell(str(cell_value))  # Assuming you have a count_words_in_cell function
         # Append the results to the new DataFrame
-        result_df = pd.concat([result_df, pd.DataFrame({"מזהה/מספר הקובץ": [paragraph_id], "paragraph number of words": [word_count]})],
-                              ignore_index=True)
-
+        result_df = pd.concat(
+            [result_df, pd.DataFrame({"file_id": [paragraph_id], "paragraph number of words": [word_count]})],
+            ignore_index=True)
     # Write the new DataFrame to a new Excel file
-    result_df.to_excel(output_excel_path, index=False)
+    result_df.to_excel(X_CLEAN_LEN, index=False)
 
 
 def excel_column_to_list(excel_file):
@@ -190,9 +190,9 @@ def main():
     # get_voca(DCPS_B_PATH, B_CLEAN_VOCA)
     # get_voca(DCPS_C_PATH, C_CLEAN_VOCA)
 
-    # get_len(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_CLEAN_LEN)
-    # get_len(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_CLEAN_LEN)
-    # get_len(CLEAN_15000, SHEET, C_START, C_FINISH, CONTENT_COL, C_CLEAN_LEN)
+    # get_len(DCPS_A_PATH, A_CLEAN_LEN)
+    # get_len(DCPS_B_PATH, B_CLEAN_LEN)
+    # get_len(DCPS_C_PATH, C_CLEAN_LEN)
 
     # in_how_many_docs_the_word_appear(A_CLEAN_LEN, A_CLEAN_VOCA, CLEAN_15000, A_CLEAN_APPEARANCES)
     # in_how_many_docs_the_word_appear(B_CLEAN_LEN, B_CLEAN_VOCA, CLEAN_15000, B_CLEAN_APPEARANCES)
