@@ -153,16 +153,24 @@ def create_all_vec(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, X_APPEARANCES,  DOCS_PATH, 
             # Get the corresponding value in the "תוכן הקובץ" column
             content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'תוכן הקובץ'].iloc[0]
             doc_as_list = content_value.split()
-            # first iteration for doc freq (how many instances of the words exist in this doc)
+            # first iteration for "Doc frequency" (how many instances of any words exist in the current doc)
             for word in doc_as_list:
                 if word in ids_dict[doc_id]:
                     ids_dict[doc_id][word] += 1
                 else:
                     ids_dict[doc_id][word] = 1
 
+
             # second iteration for TF-IDF
+            k = 20
+            b = 1 
+            l = len(doc_as_list)
             for word in doc_as_list:
-                ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
+                TF_IDF = (math.log10(5001/appearances_dict[word]))*ids_dict[doc_id][word]
+                normalize = (1-b+(b*l/avgl))
+                BM25 = (k+1)/((ids_dict[doc_id][word])+(k*normalize))
+                ids_dict[doc_id][word] = round(TF_IDF * BM25, 2)
+                # ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
 
     return ids_dict
 
