@@ -43,7 +43,7 @@ def count_words_in_cell(cell_value):
     return len(words)
 
 
-def get_cells_in_range(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
+def get_len(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
     # Read Excel file using pandas
     df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
 
@@ -205,13 +205,13 @@ def excel_to_dict(X_APPEARANCES):
 
 
 def main():
-    A_frequency_result = get_voca(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_CLEAN_VOCA)
-    B_frequency_result = get_voca(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_CLEAN_VOCA)
-    C_frequency_result = get_voca(CLEAN_15000, SHEET, C_START, C_FINISH, CONTENT_COL, C_CLEAN_VOCA)
+    # A_frequency_result = get_voca(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_CLEAN_VOCA)
+    # B_frequency_result = get_voca(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_CLEAN_VOCA)
+    # C_frequency_result = get_voca(CLEAN_15000, SHEET, C_START, C_FINISH, CONTENT_COL, C_CLEAN_VOCA)
 
-    # get_cells_in_range(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_CLEAN_LEN)
-    # get_cells_in_range(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_CLEAN_LEN)
-    # get_cells_in_range(CLEAN_15000, SHEET, C_START, C_FINISH, CONTENT_COL, C_CLEAN_LEN)
+    get_len(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_CLEAN_LEN)
+    get_len(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_CLEAN_LEN)
+    get_len(CLEAN_15000, SHEET, C_START, C_FINISH, CONTENT_COL, C_CLEAN_LEN)
 
     # x= list_of_words(A_CLEAN_VOCA, A_CLEAN_LEN, ". אלו הן רק חלק קטן מהבעיות שאיתם תאלץ להתמודד הממשלה החדשה ")
     # create_vec(A_CLEAN_LEN, A_CLEAN_VOCA, CLEAN_15000, 1461289)
