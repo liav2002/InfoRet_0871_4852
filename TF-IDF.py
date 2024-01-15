@@ -126,7 +126,8 @@ def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH):
 
 
             # second iteration for TF-IDF
-            k = 20
+            #  k is a positive constant controlling the term frequency saturation. Typical values are between 1.2 and 2.0. (ChatGPT
+            k = 1.5
             b = 1
             l = len(doc_as_list)
             unique_list = list(filter(lambda x: doc_as_list.count(x) == 1, doc_as_list))
