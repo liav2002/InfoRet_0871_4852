@@ -1,3 +1,5 @@
+import string
+
 from transformers import BertTokenizer, BertModel
 from Utills import *
 from tqdm import tqdm
@@ -51,7 +53,7 @@ def load_ABG_model(model_path=ABG_Model_Path):
     return model, tokenizer
 
 
-def get_vector_of_token_by_sentence(model, tokenizer, sentence, pivot_token):
+def get_vector_of_sentence(model, tokenizer, sentence):
     output = model(tokenizer.encode(sentence, return_tensors='pt'))
 
     hidden_states = output[2]
@@ -61,18 +63,10 @@ def get_vector_of_token_by_sentence(model, tokenizer, sentence, pivot_token):
     indexed_tokens = tokenizer.encode(sentence)
     tokenized_text = tokenizer.convert_ids_to_tokens(indexed_tokens)
 
-    if pivot_token not in tokenized_text:
-        raise ValueError(
-            "the tokenizer couldn't find the homographic word: " + pivot_token + "\nsentence: " + sentence + "\ntokenized_text: " + str(
-                tokenized_text))
-
-    return vectors[tokenized_text.index(pivot_token)]
+    return vectors[tokenized_text.index('[CLS]')]
 
 
-def generate_document_vector(text):
-    # Load Model
-    model, tokenizer = load_ABG_model()
-
+def generate_document_vector(text, model, tokenizer):
     #  Initialize an empty vector for the document
     document_vector = np.zeros((768,))
 
@@ -81,13 +75,14 @@ def generate_document_vector(text):
 
     # Process each sentence
     for sentence in sentences:
-        # Split sentence into words
-        words = sentence.split(' ')
-
-        # Calculate and add vectors for each word
-        for word in words:
-            current_vector = get_vector_of_token_by_sentence(model, tokenizer, sentence, word)
+        # Calculate and add vectors for each sentence
+        try:
+            current_vector = get_vector_of_sentence(model, tokenizer, sentence)
             document_vector += current_vector
+        except Exception as e :
+            print(f"Error accrued in sentence: {sentence}")
+            print(f"Error message: {e}")
+            print("Pass this sentence and continue with others.\n")
 
     return document_vector.tolist()
 
@@ -95,11 +90,17 @@ def generate_document_vector(text):
 def create_json_file(df, output_path):
     result_dict = {}
 
+    # Load Model
+    print("Loading Aleph Bert Gimel Model...")
+    model, tokenizer = load_ABG_model()
+    print("Model load successfully.")
+    sleep(0.1)
+
     for _, row in tqdm(df.iterrows(), total=len(df), desc="Processing Documents"):
         file_id = row['file_id']
         content = row['content']
 
-        document_vector = generate_document_vector(content)
+        document_vector = generate_document_vector(content, model, tokenizer)
 
         if document_vector:
             result_dict[file_id] = document_vector
