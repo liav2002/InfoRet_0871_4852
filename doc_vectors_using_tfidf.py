@@ -17,6 +17,19 @@ C_START = 10010
 C_FINISH = 15009
 SHEET = "Sheet1"
 CLEAN_15000 = ".\\data\\clean_15000.xlsx"
+
+
+# Data Cleaned From Punctuations and Stop-words Input
+DCPS_A_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_A.xlsx"
+DCPS_B_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_B.xlsx"
+DCPS_C_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_C.xlsx"
+
+# Output Destination Excels
+OUTPUT_A_EXCEL = "./output/bert_on_source/source_A_vec.xlsx"
+OUTPUT_B_EXCEL = "./output/bert_on_source/source_B_vec.xlsx"
+OUTPUT_C_EXCEL = "./output/bert_on_source/source_C_vec.xlsx"
+
+#Temp files for calculate TF-IDF.
 A_CLEAN_VOCA = ".\\nehorai_temp_files\\A_CLEAN_VOCA.xlsx"
 B_CLEAN_VOCA = ".\\nehorai_temp_files\\B_CLEAN_VOCA.xlsx"
 C_CLEAN_VOCA = ".\\nehorai_temp_files\\C_CLEAN_VOCA.xlsx"
@@ -30,16 +43,15 @@ A_CLEAN_MATRIX = ".\\output\\nehorai_files\\A_CLEAN_MATRIX .xlsx"
 B_CLEAN_MATRIX = ".\\output\\nehorai_files\\B_CLEAN_MATRIX .xlsx"
 C_CLEAN_MATRIX = ".\\output\\nehorai_files\\C_CLEAN_MATRIX .xlsx"
 
-
-def get_voca(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
-    column_values = pd.read_excel(excel_file_path, sheet_name=sheet_name, header=None, usecols=[column_index], skiprows=start_row-1, nrows=end_row-start_row+1)[column_index]
+def get_voca(DCPS_X_PATH, X_CLEAN_VOCA):
+    df = pd.read_excel(DCPS_X_PATH)
+    column_values = df["content"]
     all_text = ' '.join(map(str, column_values))
     word_frequency = Counter(all_text.split())
     result_list = list(word_frequency.items())
     result_list.sort(key=lambda x: x[1], reverse=True)
     df_output = pd.DataFrame(result_list, columns=["Word", "Count"])
-    df_output.to_excel(output_excel_path, index=False)
-    return result_list
+    df_output.to_excel(X_CLEAN_VOCA, index=False)
 
 
 def count_words_in_cell(cell_value):
@@ -185,9 +197,9 @@ def excel_to_dict(X_APPEARANCES):
 
 
 def main():
-    # A_frequency_result = get_voca(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_CLEAN_VOCA)
-    # B_frequency_result = get_voca(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_CLEAN_VOCA)
-    # C_frequency_result = get_voca(CLEAN_15000, SHEET, C_START, C_FINISH, CONTENT_COL, C_CLEAN_VOCA)
+    get_voca(DCPS_A_PATH, A_CLEAN_VOCA)
+    get_voca(DCPS_B_PATH, B_CLEAN_VOCA)
+    get_voca(DCPS_C_PATH, C_CLEAN_VOCA)
 
     # get_len(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_CLEAN_LEN)
     # get_len(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_CLEAN_LEN)
