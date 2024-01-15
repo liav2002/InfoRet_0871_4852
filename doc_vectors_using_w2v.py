@@ -14,6 +14,9 @@ DCPS_C_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_C.xlsx"
 OUTPUT_DCPS_A = "./output/w2v_on_dcps/dcps_A_vec.json"
 OUTPUT_DCPS_B = "./output/w2v_on_dcps/dcps_B_vec.json"
 OUTPUT_DCPS_C = "./output/w2v_on_dcps/dcps_C_vec.json"
+OUTPUT_DCPS_A_EXCEL = "./output/w2v_on_dcps/dcps_A_vec.xlsx"
+OUTPUT_DCPS_B_EXCEL = "./output/w2v_on_dcps/dcps_B_vec.xlsx"
+OUTPUT_DCPS_C_EXCEL = "./output/w2v_on_dcps/dcps_C_vec.xlsx"
 
 # Data Cleaned From Punctuations Input
 DCP_A_PATH = "./input/data_cleaned_from_punctuations/dcp_A.xlsx"
@@ -24,6 +27,9 @@ DCP_C_PATH = "./input/data_cleaned_from_punctuations/dcp_C.xlsx"
 OUTPUT_DCP_A = "./output/w2v_on_dcp/dcp_A_vec.json"
 OUTPUT_DCP_B = "./output/w2v_on_dcp/dcp_B_vec.json"
 OUTPUT_DCP_C = "./output/w2v_on_dcp/dcp_C_vec.json"
+OUTPUT_DCP_A_EXCEL = "./output/w2v_on_dcp/dcp_A_vec.xlsx"
+OUTPUT_DCP_B_EXCEL = "./output/w2v_on_dcp/dcp_B_vec.xlsx"
+OUTPUT_DCP_C_EXCEL = "./output/w2v_on_dcp/dcp_C_vec.xlsx"
 
 # Data With Lemot Only Input
 DWLO_A_PATH = "./input/data_with_lemot_only/dwlo_A.xlsx"
@@ -34,6 +40,9 @@ DWLO_C_PATH = "./input/data_with_lemot_only/dwlo_C.xlsx"
 OUTPUT_DWLO_A = "./output/w2v_on_dwlo/dwlo_A_vec.json"
 OUTPUT_DWLO_B = "./output/w2v_on_dwlo/dwlo_B_vec.json"
 OUTPUT_DWLO_C = "./output/w2v_on_dwlo/dwlo_C_vec.json"
+OUTPUT_DWLO_A_EXCEL = "./output/w2v_on_dwlo/dwlo_A_vec.xlsx"
+OUTPUT_DWLO_B_EXCEL = "./output/w2v_on_dwlo/dwlo_B_vec.xlsx"
+OUTPUT_DWLO_C_EXCEL = "./output/w2v_on_dwlo/dwlo_C_vec.xlsx"
 
 # Word2Vec Model Path
 W2V_VECTORS = "./model/w2v/words_vectors.npy"
@@ -88,6 +97,18 @@ def create_json_file(df, output_path):
     print(f"Output save in: {output_path}.")
 
 
+def json2excel(input_file="", output_file=""):
+    # Read the JSON file into a dictionary
+    with open(input_file, 'r') as json_file:
+        data = json.load(json_file)
+
+    # Create a DataFrame from the vectors
+    df = pd.DataFrame(data.values())
+
+    # Write the DataFrame to an Excel file
+    df.to_excel(output_file, header=False, index=False)
+
+
 def main():
     # Create doc vectors from data without punctuations and without stop-words.
     if all_files_exist([DCPS_A_PATH, DCPS_B_PATH, DCPS_C_PATH]) and not all_files_exist(
@@ -103,12 +124,28 @@ def main():
         print("Working on group A")
         sleep(0.1)
         create_json_file(df_A, OUTPUT_DCPS_A)
-        print("Working on group B")
+        print("\nWorking on group B")
         sleep(0.1)
         create_json_file(df_B, OUTPUT_DCPS_B)
         sleep(0.1)
-        print("Working on group C")
+        print("\nWorking on group C")
         create_json_file(df_C, OUTPUT_DCPS_C)
+        sleep(0.1)
+
+        # Generate Group A JSON to Excel
+        print(f"\nTry to save {OUTPUT_DCPS_A} as {OUTPUT_DCPS_A_EXCEL}...")
+        json2excel(OUTPUT_DCPS_A, OUTPUT_DCPS_A_EXCEL)
+        print(f"File successfully saved in {OUTPUT_DCPS_A_EXCEL}.\n")
+
+        # Generate Group B JSON to Excel
+        print(f"Try to save {OUTPUT_DCPS_B} as {OUTPUT_DCPS_B_EXCEL}...")
+        json2excel(OUTPUT_DCPS_B, OUTPUT_DCPS_B_EXCEL)
+        print(f"File successfully saved in {OUTPUT_DCPS_B_EXCEL}.\n")
+
+        # Generate Group C JSON to Excel
+        print(f"Try to save {OUTPUT_DCPS_C} as {OUTPUT_DCPS_C_EXCEL}...")
+        json2excel(OUTPUT_DCPS_C, OUTPUT_DCPS_C_EXCEL)
+        print(f"File successfully saved in {OUTPUT_DCPS_C_EXCEL}.\n")
 
     # Create doc vectors from data without punctuations (but with stop-words).
     if all_files_exist([DCP_A_PATH, DCP_B_PATH, DCP_C_PATH]) and not all_files_exist(
@@ -124,12 +161,27 @@ def main():
         print("Working on group A")
         sleep(0.1)
         create_json_file(df_A, OUTPUT_DCP_A)
-        print("Working on group B")
+        print("\nWorking on group B")
         sleep(0.1)
         create_json_file(df_B, OUTPUT_DCP_B)
-        print("Working on group C")
+        print("\nWorking on group C")
         sleep(0.1)
         create_json_file(df_C, OUTPUT_DCP_C)
+
+        # Generate Group A JSON to Excel
+        print(f"\nTry to save {OUTPUT_DCP_A} as {OUTPUT_DCP_A_EXCEL}...")
+        json2excel(OUTPUT_DCP_A, OUTPUT_DCP_A_EXCEL)
+        print(f"File successfully saved in {OUTPUT_DCP_A_EXCEL}.\n")
+
+        # Generate Group B JSON to Excel
+        print(f"Try to save {OUTPUT_DCP_B} as {OUTPUT_DCP_B_EXCEL}...")
+        json2excel(OUTPUT_DCP_B, OUTPUT_DCP_B_EXCEL)
+        print(f"File successfully saved in {OUTPUT_DCP_B_EXCEL}.\n")
+
+        # Generate Group C JSON to Excel
+        print(f"Try to save {OUTPUT_DCP_C} as {OUTPUT_DCP_C_EXCEL}...")
+        json2excel(OUTPUT_DCP_C, OUTPUT_DCP_C_EXCEL)
+        print(f"File successfully saved in {OUTPUT_DCP_C_EXCEL}.\n")
 
     # Create doc vectors from data with lemot only.
     if all_files_exist([DWLO_A_PATH, DWLO_B_PATH, DWLO_C_PATH]) and not all_files_exist(
@@ -145,12 +197,27 @@ def main():
         print("Working on group A")
         sleep(0.1)
         create_json_file(df_A, OUTPUT_DWLO_A)
-        print("Working on group B")
+        print("\nWorking on group B")
         sleep(0.1)
         create_json_file(df_B, OUTPUT_DWLO_B)
-        print("Working on group C")
+        print("\nWorking on group C")
         sleep(0.1)
         create_json_file(df_C, OUTPUT_DWLO_C)
+
+        # Generate Group A JSON to Excel
+        print(f"\nTry to save {OUTPUT_DWLO_A} as {OUTPUT_DWLO_A_EXCEL}...")
+        json2excel(OUTPUT_DWLO_A, OUTPUT_DWLO_A_EXCEL)
+        print(f"File successfully saved in {OUTPUT_DWLO_A_EXCEL}.\n")
+
+        # Generate Group B JSON to Excel
+        print(f"Try to save {OUTPUT_DWLO_B} as {OUTPUT_DWLO_B_EXCEL}...")
+        json2excel(OUTPUT_DWLO_B, OUTPUT_DWLO_B_EXCEL)
+        print(f"File successfully saved in {OUTPUT_DWLO_B_EXCEL}.\n")
+
+        # Generate Group C JSON to Excel
+        print(f"Try to save {OUTPUT_DWLO_C} as {OUTPUT_DWLO_C_EXCEL}...")
+        json2excel(OUTPUT_DWLO_C, OUTPUT_DWLO_C_EXCEL)
+        print(f"File successfully saved in {OUTPUT_DWLO_C_EXCEL}.\n")
 
 
 if __name__ == "__main__":
