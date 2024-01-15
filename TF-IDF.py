@@ -144,6 +144,7 @@ def create_all_vec(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, DOCS_PATH, output_path):
     df = pd.read_excel(DOCS_PATH)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
     df = df.drop(columns=[df.columns[0], df.columns[3]])
+    avgl = get_avgl(X_LEN_OUTPUT_PATH, all_IDs)
     ids_dict = {doc_id: {} for doc_id in all_IDs}
     for doc_id in all_IDs:
         if doc_id in df['מזהה/מספר הקובץ'].values:
@@ -164,26 +165,15 @@ def create_nested_dict(external_list, inner_list):
         nested_dict[key] = {inner_key: None for inner_key in inner_list}
     return nested_dict
 
-
-def create_sparse_matrix(external_list, inner_list):
-    # Convert inner_list string to a list of integers
-    inner_indices = inner_list
-
-    # Example logic to determine data values (replace with your logic)
-    data = [1] * min(len(external_list), len(inner_indices))
-
-    # Determine the minimum length to avoid IndexError
-    min_length = min(len(external_list), len(inner_indices))
-
-    # Pad or truncate the longer list to the minimum length
-    truncated_external_list = external_list[:min_length]
-    truncated_inner_indices = inner_indices[:min_length]
-
-    # Create the COO matrix directly
-    sparse_matrix = coo_matrix((data, (truncated_external_list, truncated_inner_indices)),
-                               shape=(len(external_list), len(inner_indices)))
-
-    return sparse_matrix
+def get_avgl(X_LEN_OUTPUT_PATH, all_IDs):
+    sum = 0
+    df = pd.read_excel(X_LEN_OUTPUT_PATH)
+    for doc_id in all_IDs:
+        if doc_id in df['מזהה/מספר הקובץ'].values:
+            # Get the corresponding value in the "תוכן הקובץ" column
+            content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'paragraph number of words'].iloc[0]
+            sum = sum + content_value
+    return sum/(len(all_IDs))
 
 
 def main():
