@@ -163,13 +163,13 @@ def create_all_vec(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, X_APPEARANCES,  DOCS_PATH, 
 
             # second iteration for TF-IDF
             k = 20
-            b = 1 
+            b = 1
             l = len(doc_as_list)
             for word in doc_as_list:
                 TF_IDF = (math.log10(5001/appearances_dict[word]))*ids_dict[doc_id][word]
                 normalize = (1-b+(b*l/avgl))
                 BM25 = (k+1)/((ids_dict[doc_id][word])+(k*normalize))
-                ids_dict[doc_id][word] = round(TF_IDF * BM25, 2)
+                ids_dict[doc_id][word] = round(TF_IDF * BM25, 4)
                 # ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
 
     return ids_dict
@@ -221,7 +221,7 @@ def main():
     # in_how_many_docs_the_word_appear(C_LEN_OUTPUT_PATH, C_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\C_in_how_many_docs_the_word_appear.xlsx")
 
     ids_dict = create_all_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, A_APPEARANCES, FILE_PATH, "C:\\Users\\nehor\\Downloads\\A_draft.xlsx")
-    print(ids_dict)
+    print(ids_dict[1461014])
     print("Word frequency in the specified range:")
 
 
