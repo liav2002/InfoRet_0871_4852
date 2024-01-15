@@ -23,7 +23,6 @@ C_CLEAN_VOCA = ".\\temp_files\\C_CLEAN_VOCA.xlsx"
 A_CLEAN_LEN = ".\\temp_files\\A_CLEAN_LEN.xlsx"
 B_CLEAN_LEN = ".\\temp_files\\B_CLEAN_LEN.xlsx"
 C_CLEAN_LEN = ".\\temp_files\\C_CLEAN_LEN.xlsx"
-METRIX_A_PATH = "C:\\Users\\nehor\\Downloads\\METRIX_A.xlsx"
 A_CLEAN_APPEARANCES = ".\\temp_files\\A_CLEAN_APPEARANCES.xlsx"
 B_CLEAN_APPEARANCES = ".\\temp_files\\B_CLEAN_APPEARANCES.xlsx"
 C_CLEAN_APPEARANCES = ".\\temp_files\\C_CLEAN_APPEARANCES.xlsx"
@@ -64,10 +63,6 @@ def get_len(excel_file_path, sheet_name, start_row, end_row, column_index, outpu
 
     # Write the new DataFrame to a new Excel file
     result_df.to_excel(output_excel_path, index=False)
-
-
-def c(w, d):
-    return d.count(w)
 
 
 def excel_column_to_list(excel_file):
@@ -134,7 +129,8 @@ def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH):
             k = 20
             b = 1
             l = len(doc_as_list)
-            for word in doc_as_list:
+            unique_list = list(filter(lambda x: doc_as_list.count(x) == 1, doc_as_list))
+            for word in unique_list:
                 TF_IDF = (math.log10(5001/appearances_dict[word]))*ids_dict[doc_id][word]
                 normalize = (1-b+(b*l/avgl))
                 BM25 = (k+1)/((ids_dict[doc_id][word])+(k*normalize))
@@ -191,7 +187,8 @@ def main():
     # print(ids_dict[2592098])
     # ids_dict = create_all_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, CLEAN_15000)
     # print(ids_dict[3036697])
-    print("Word frequency in the specified range:")
+
+    print("+++++finish+++++")
 
 
 if __name__ == "__main__":
