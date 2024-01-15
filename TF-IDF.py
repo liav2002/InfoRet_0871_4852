@@ -137,16 +137,22 @@ def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH, X_CLEAN
             unique_list = list(filter(lambda x: doc_as_list.count(x) == 1, doc_as_list))
             for word in unique_list:
                 TF_IDF = (math.log10(5001/appearances_dict[word]))*ids_dict[doc_id][word]
-                normalize = (1-b+(b*l/avgl))
+                normalize = (1-b+((b*l)/avgl))
                 BM25 = (k+1)/((ids_dict[doc_id][word])+(k*normalize))
-                ids_dict[doc_id][word] = round(TF_IDF * BM25, 4)
+                ids_dict[doc_id][word] = round((TF_IDF * BM25), 4)
                 # ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
 
+    #++++++++++++++++++++++++++++++++++++++ More RAM request ++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # df_matrix = pd.DataFrame.from_dict(ids_dict, orient='index')
     # # Transpose the DataFrame
     # df_transposed = df_matrix.transpose()
     # # Write transposed DataFrame to Excel file
     # df_transposed.to_excel(X_CLEAN_MATRIX, index=True)
+    #++++++++++++++++++++++++++++++++++++++ More RAM request ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    df = pd.DataFrame(list(ids_dict.items()), columns=['ID', 'Value'])
+    df.to_excel(X_CLEAN_MATRIX, index=False)
+
     return ids_dict
 
 
@@ -191,12 +197,12 @@ def main():
     # in_how_many_docs_the_word_appear(B_CLEAN_LEN, B_CLEAN_VOCA, CLEAN_15000, B_CLEAN_APPEARANCES)
     # in_how_many_docs_the_word_appear(C_CLEAN_LEN, C_CLEAN_VOCA, CLEAN_15000, C_CLEAN_APPEARANCES)
 
-    # ids_dict = create_all_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, CLEAN_15000, A_CLEAN_MATRIX)
-    # print(ids_dict[1461014])
-    # ids_dict = create_all_vec(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, CLEAN_15000, B_CLEAN_MATRIX)
-    # print(ids_dict[2592098])
-    # ids_dict = create_all_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, CLEAN_15000, C_CLEAN_MATRIX)
-    # print(ids_dict[3036697])
+    ids_dict = create_all_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, CLEAN_15000, A_CLEAN_MATRIX)
+    print(ids_dict[1461014])
+    ids_dict = create_all_vec(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, CLEAN_15000, B_CLEAN_MATRIX)
+    print(ids_dict[2592098])
+    ids_dict = create_all_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, CLEAN_15000, C_CLEAN_MATRIX)
+    print(ids_dict[3036697])
 
 
 
