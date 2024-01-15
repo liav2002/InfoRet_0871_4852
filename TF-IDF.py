@@ -26,9 +26,9 @@ C_CLEAN_LEN = ".\\temp_files\\C_CLEAN_LEN.xlsx"
 A_CLEAN_APPEARANCES = ".\\temp_files\\A_CLEAN_APPEARANCES.xlsx"
 B_CLEAN_APPEARANCES = ".\\temp_files\\B_CLEAN_APPEARANCES.xlsx"
 C_CLEAN_APPEARANCES = ".\\temp_files\\C_CLEAN_APPEARANCES.xlsx"
-A_CLEAN_MATRIX = ".\\output\\A_CLEAN_MATRIX .xlsx"
-B_CLEAN_MATRIX = ".\\output\\B_CLEAN_MATRIX .xlsx"
-C_CLEAN_MATRIX = ".\\output\\C_CLEAN_MATRIX .xlsx"
+A_CLEAN_MATRIX = ".\\output\\nehorai_files\\A_CLEAN_MATRIX .xlsx"
+B_CLEAN_MATRIX = ".\\output\\nehorai_files\\B_CLEAN_MATRIX .xlsx"
+C_CLEAN_MATRIX = ".\\output\\nehorai_files\\C_CLEAN_MATRIX .xlsx"
 
 
 def get_voca(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
