@@ -3,6 +3,7 @@ from tqdm import tqdm
 import pandas as pd
 import numpy as np
 import json
+from time import sleep
 
 # Data Cleaned From Punctuations and Stop-words Input
 DCPS_A_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_A.xlsx"
@@ -89,21 +90,24 @@ def create_json_file(df, output_path):
 
 def main():
     # Create doc vectors from data without punctuations and stop-words.
-    if all_files_exist([DCPS_A_PATH, DCPS_B_PATH, DCPS_C_PATH]):
-        print("Creating document's vectors from DCPS_DATA using Word2Vec.")
-
-        # Load DataFrames
-        df_A = pd.read_excel(DCPS_A_PATH)
-        df_B = pd.read_excel(DCPS_B_PATH)
-        df_C = pd.read_excel(DCPS_C_PATH)
-
-        # Create JSON files for each group
-        print("Working on group A")
-        create_json_file(df_A, OUTPUT_DCPS_A)
-        print("Working on group B")
-        create_json_file(df_B, OUTPUT_DCPS_B)
-        print("Working on group C")
-        create_json_file(df_C, OUTPUT_DCPS_C)
+    # if all_files_exist([DCPS_A_PATH, DCPS_B_PATH, DCPS_C_PATH]):
+    #     print("Creating document's vectors from DCPS_DATA using Word2Vec.")
+    #
+    #     # Load DataFrames
+    #     df_A = pd.read_excel(DCPS_A_PATH)
+    #     df_B = pd.read_excel(DCPS_B_PATH)
+    #     df_C = pd.read_excel(DCPS_C_PATH)
+    #
+    #     # Create JSON files for each group
+    #     print("Working on group A")
+    #     sleep(0.1)
+    #     create_json_file(df_A, OUTPUT_DCPS_A)
+    #     print("Working on group B")
+    #     sleep(0.1)
+    #     create_json_file(df_B, OUTPUT_DCPS_B)
+    #     sleep(0.1)
+    #     print("Working on group C")
+    #     create_json_file(df_C, OUTPUT_DCPS_C)
 
     # Create doc vectors from data without punctuations.
     if all_files_exist([DCP_A_PATH, DCP_B_PATH, DCP_C_PATH]):
@@ -116,10 +120,13 @@ def main():
 
         # Create JSON files for each group
         print("Working on group A")
+        sleep(0.1)
         create_json_file(df_A, OUTPUT_DCP_A)
         print("Working on group B")
+        sleep(0.1)
         create_json_file(df_B, OUTPUT_DCP_B)
         print("Working on group C")
+        sleep(0.1)
         create_json_file(df_C, OUTPUT_DCP_C)
 
     # Create doc vectors from data with lemot.
@@ -133,10 +140,13 @@ def main():
 
         # Create JSON files for each group
         print("Working on group A")
+        sleep(0.1)
         create_json_file(df_A, OUTPUT_DWLO_A)
         print("Working on group B")
+        sleep(0.1)
         create_json_file(df_B, OUTPUT_DWLO_B)
         print("Working on group C")
+        sleep(0.1)
         create_json_file(df_C, OUTPUT_DWLO_C)
 
 
