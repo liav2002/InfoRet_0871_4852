@@ -142,6 +142,7 @@ def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH, X_CLEAN
                 ids_dict[doc_id][word] = round((TF_IDF * BM25), 4)
                 # ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
 
+
     #++++++++++++++++++++++++++++++++++++++ More RAM request ++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # df_matrix = pd.DataFrame.from_dict(ids_dict, orient='index')
     # # Transpose the DataFrame
