@@ -15,11 +15,11 @@ B_START = 5006
 B_FINISH = 10005
 C_START = 10010
 C_FINISH = 15009
-FILE_PATH = "C:\\Users\\nehor\\OneDrive - click\\שולחן העבודה\\InfoRet_0871_4852\\data\\clean_15000.xlsx"
 SHEET = "Sheet1"
-A_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\A_CLEAN_VOCA.xlsx"
-B_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\B_CLEAN_VOCA.xlsx"
-C_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\C_CLEAN_VOCA.xlsx"
+CLEAN_15000 = ".\\data\\clean_15000.xlsx"
+A_CLEAN_VOCA = ".\\temp_files\\A_CLEAN_VOCA.xlsx"
+B_CLEAN_VOCA = ".\\temp_files\\B_CLEAN_VOCA.xlsx"
+C_CLEAN_VOCA = ".\\temp_files\\C_CLEAN_VOCA.xlsx"
 A_LEN_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\A_CLEAN_LEN.xlsx"
 B_LEN_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\B_CLEAN_LEN.xlsx"
 C_LEN_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\C_CLEAN_LEN.xlsx"
@@ -97,8 +97,8 @@ def excel_column_to_list(excel_file):
     return first_column_values
 
 
-def list_of_words(X_OUTPUT_PATH, X_LEN_OUTPUT_PATH, input_string):
-    create_matrix(X_OUTPUT_PATH, X_LEN_OUTPUT_PATH)
+def list_of_words(X_CLEAN_VOCA, X_LEN_OUTPUT_PATH, input_string):
+    create_matrix(X_CLEAN_VOCA, X_LEN_OUTPUT_PATH)
     word_list = excel_column_to_list("C:\\Users\\nehor\\Downloads\\WORD.xlsx")
     word_counts = {}
     for word in word_list:
@@ -107,14 +107,14 @@ def list_of_words(X_OUTPUT_PATH, X_LEN_OUTPUT_PATH, input_string):
     return word_counts
 
 
-def get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH):
-    all_words = excel_column_to_list(X_OUTPUT_PATH)
+def get_IDs_and_words(X_LEN_OUTPUT_PATH, X_CLEAN_VOCA):
+    all_words = excel_column_to_list(X_CLEAN_VOCA)
     all_IDs = excel_column_to_list(X_LEN_OUTPUT_PATH)
     return  all_IDs, all_words
 
 
-def in_how_many_docs_the_word_appear(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, DOCS_PATH, output_path):
-    all_IDs, all_words = get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH)
+def in_how_many_docs_the_word_appear(X_LEN_OUTPUT_PATH, X_CLEAN_VOCA, DOCS_PATH, output_path):
+    all_IDs, all_words = get_IDs_and_words(X_LEN_OUTPUT_PATH, X_CLEAN_VOCA)
     df = pd.read_excel(DOCS_PATH)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
     df = df.drop(columns=[df.columns[0], df.columns[3]])
@@ -140,8 +140,8 @@ def list_to_dict(input_list):
 
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def create_all_vec(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, X_APPEARANCES,  DOCS_PATH, output_path):
-    all_IDs, all_words = get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH)
+def create_all_vec(X_LEN_OUTPUT_PATH, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH, output_path):
+    all_IDs, all_words = get_IDs_and_words(X_LEN_OUTPUT_PATH, X_CLEAN_VOCA)
     df = pd.read_excel(DOCS_PATH)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
     df = df.drop(columns=[df.columns[0], df.columns[3]])
@@ -205,23 +205,23 @@ def excel_to_dict(X_APPEARANCES):
 
 
 def main():
-    # A_frequency_result = get_cells_in_range(FILE_PATH, SHEET, A_START, A_FINISH, CONTENT_COL, A_OUTPUT_PATH)
-    # B_frequency_result = get_cells_in_range(FILE_PATH, SHEET, B_START, B_FINISH, CONTENT_COL, B_OUTPUT_PATH)
-    # C_frequency_result = get_cells_in_range(FILE_PATH, SHEET, C_START, C_FINISH, CONTENT_COL, C_OUTPUT_PATH)
+    A_frequency_result = get_cells_in_range(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_CLEAN_VOCA)
+    B_frequency_result = get_cells_in_range(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_CLEAN_VOCA)
+    C_frequency_result = get_cells_in_range(CLEAN_15000, SHEET, C_START, C_FINISH, CONTENT_COL, C_CLEAN_VOCA)
 
-    # get_cells_in_range(FILE_PATH, SHEET, A_START, A_FINISH, CONTENT_COL, A_LEN_OUTPUT_PATH)
-    # get_cells_in_range(FILE_PATH, SHEET, B_START, B_FINISH, CONTENT_COL, B_LEN_OUTPUT_PATH)
-    # get_cells_in_range(FILE_PATH, SHEET, C_START, C_FINISH, CONTENT_COL, C_LEN_OUTPUT_PATH)
+    # get_cells_in_range(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_LEN_OUTPUT_PATH)
+    # get_cells_in_range(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_LEN_OUTPUT_PATH)
+    # get_cells_in_range(CLEAN_15000, SHEET, C_START, C_FINISH, CONTENT_COL, C_LEN_OUTPUT_PATH)
 
-    # x= list_of_words(A_OUTPUT_PATH, A_LEN_OUTPUT_PATH, ". אלו הן רק חלק קטן מהבעיות שאיתם תאלץ להתמודד הממשלה החדשה ")
-    # create_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, 1461289)
+    # x= list_of_words(A_CLEAN_VOCA, A_LEN_OUTPUT_PATH, ". אלו הן רק חלק קטן מהבעיות שאיתם תאלץ להתמודד הממשלה החדשה ")
+    # create_vec(A_LEN_OUTPUT_PATH, A_CLEAN_VOCA, CLEAN_15000, 1461289)
 
-    # in_how_many_docs_the_word_appear(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\A_in_how_many_docs_the_word_appear.xlsx")
-    # in_how_many_docs_the_word_appear(B_LEN_OUTPUT_PATH, B_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\B_in_how_many_docs_the_word_appear.xlsx")
-    # in_how_many_docs_the_word_appear(C_LEN_OUTPUT_PATH, C_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\C_in_how_many_docs_the_word_appear.xlsx")
+    # in_how_many_docs_the_word_appear(A_LEN_OUTPUT_PATH, A_CLEAN_VOCA, CLEAN_15000, "C:\\Users\\nehor\\Downloads\\A_in_how_many_docs_the_word_appear.xlsx")
+    # in_how_many_docs_the_word_appear(B_LEN_OUTPUT_PATH, B_CLEAN_VOCA, CLEAN_15000, "C:\\Users\\nehor\\Downloads\\B_in_how_many_docs_the_word_appear.xlsx")
+    # in_how_many_docs_the_word_appear(C_LEN_OUTPUT_PATH, C_CLEAN_VOCA, CLEAN_15000, "C:\\Users\\nehor\\Downloads\\C_in_how_many_docs_the_word_appear.xlsx")
 
-    ids_dict = create_all_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, A_APPEARANCES, FILE_PATH, "C:\\Users\\nehor\\Downloads\\A_draft.xlsx")
-    print(ids_dict[1461014])
+    # ids_dict = create_all_vec(A_LEN_OUTPUT_PATH, A_CLEAN_VOCA, A_APPEARANCES, CLEAN_15000, "C:\\Users\\nehor\\Downloads\\A_draft.xlsx")
+    # print(ids_dict[1461014])
     print("Word frequency in the specified range:")
 
 
