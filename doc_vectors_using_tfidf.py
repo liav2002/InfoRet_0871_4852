@@ -82,16 +82,16 @@ def get_IDs_and_words(X_CLEAN_LEN, X_CLEAN_VOCA):
     return  all_IDs, all_words
 
 
-def in_how_many_docs_the_word_appear(X_CLEAN_LEN, X_CLEAN_VOCA, DOCS_PATH, output_path):
+def get_appearances(X_CLEAN_LEN, X_CLEAN_VOCA, DCPS_X_PATH, X_CLEAN_APPEARANCES):
     all_IDs, all_words = get_IDs_and_words(X_CLEAN_LEN, X_CLEAN_VOCA)
-    df = pd.read_excel(DOCS_PATH)
+    df = pd.read_excel(DCPS_X_PATH)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
-    df = df.drop(columns=[df.columns[0], df.columns[3]])
+    df = df.drop(columns=[df.columns[0]])
     words_dict = dict.fromkeys(all_words, 0)
     for doc_id in all_IDs:
-        if doc_id in df['מזהה/מספר הקובץ'].values:
+        if doc_id in df['file_id'].values:
             # Get the corresponding value in the "תוכן הקובץ" column
-            content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'תוכן הקובץ'].iloc[0]
+            content_value = df.loc[df['file_id'] == doc_id, 'content'].iloc[0]
             doc_as_list = content_value.split()
             current_doc_dict = dict.fromkeys(doc_as_list, 0)
             for word in doc_as_list:
@@ -100,7 +100,7 @@ def in_how_many_docs_the_word_appear(X_CLEAN_LEN, X_CLEAN_VOCA, DOCS_PATH, outpu
                     current_doc_dict[word] = 1
 
     df = pd.DataFrame(list(words_dict.items()), columns=['Word', 'Count'])
-    df.to_excel(output_path, index=False)
+    df.to_excel(X_CLEAN_APPEARANCES, index=False)
 
 
 def list_to_dict(input_list):
@@ -194,9 +194,9 @@ def main():
     # get_len(DCPS_B_PATH, B_CLEAN_LEN)
     # get_len(DCPS_C_PATH, C_CLEAN_LEN)
 
-    # in_how_many_docs_the_word_appear(A_CLEAN_LEN, A_CLEAN_VOCA, CLEAN_15000, A_CLEAN_APPEARANCES)
-    # in_how_many_docs_the_word_appear(B_CLEAN_LEN, B_CLEAN_VOCA, CLEAN_15000, B_CLEAN_APPEARANCES)
-    # in_how_many_docs_the_word_appear(C_CLEAN_LEN, C_CLEAN_VOCA, CLEAN_15000, C_CLEAN_APPEARANCES)
+    # get_appearances(A_CLEAN_LEN, A_CLEAN_VOCA, DCPS_A_PATH, A_CLEAN_APPEARANCES)
+    # get_appearances(B_CLEAN_LEN, B_CLEAN_VOCA, DCPS_B_PATH, B_CLEAN_APPEARANCES)
+    # get_appearances(C_CLEAN_LEN, C_CLEAN_VOCA, DCPS_C_PATH, C_CLEAN_APPEARANCES)
 
     # ids_dict = create_all_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, CLEAN_15000, A_CLEAN_MATRIX)
     # print(ids_dict[1461014])
