@@ -160,3 +160,6 @@ cython_debug/
 .idea/
 hebpipe_whl/
 model/
+output/bert_on_source/source_A_vec.json
+output/bert_on_source/source_B_vec.json
+output/bert_on_source/source_C_vec.json
