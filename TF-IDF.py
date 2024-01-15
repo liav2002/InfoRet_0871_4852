@@ -26,6 +26,10 @@ C_CLEAN_LEN = ".\\temp_files\\C_CLEAN_LEN.xlsx"
 A_CLEAN_APPEARANCES = ".\\temp_files\\A_CLEAN_APPEARANCES.xlsx"
 B_CLEAN_APPEARANCES = ".\\temp_files\\B_CLEAN_APPEARANCES.xlsx"
 C_CLEAN_APPEARANCES = ".\\temp_files\\C_CLEAN_APPEARANCES.xlsx"
+A_CLEAN_MATRIX = ".\\output\\A_CLEAN_MATRIX .xlsx"
+B_CLEAN_MATRIX = ".\\output\\B_CLEAN_MATRIX .xlsx"
+C_CLEAN_MATRIX = ".\\output\\C_CLEAN_MATRIX .xlsx"
+
 
 def get_voca(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
     column_values = pd.read_excel(excel_file_path, sheet_name=sheet_name, header=None, usecols=[column_index], skiprows=start_row-1, nrows=end_row-start_row+1)[column_index]
@@ -104,7 +108,7 @@ def list_to_dict(input_list):
     return result_dict
 
 
-def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH):
+def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH, X_CLEAN_MATRIX):
     all_IDs, all_words = get_IDs_and_words(X_CLEAN_LEN, X_CLEAN_VOCA)
     df = pd.read_excel(DOCS_PATH)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
@@ -138,6 +142,11 @@ def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH):
                 ids_dict[doc_id][word] = round(TF_IDF * BM25, 4)
                 # ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
 
+    # df_matrix = pd.DataFrame.from_dict(ids_dict, orient='index')
+    # # Transpose the DataFrame
+    # df_transposed = df_matrix.transpose()
+    # # Write transposed DataFrame to Excel file
+    # df_transposed.to_excel(X_CLEAN_MATRIX, index=True)
     return ids_dict
 
 
@@ -182,12 +191,14 @@ def main():
     # in_how_many_docs_the_word_appear(B_CLEAN_LEN, B_CLEAN_VOCA, CLEAN_15000, B_CLEAN_APPEARANCES)
     # in_how_many_docs_the_word_appear(C_CLEAN_LEN, C_CLEAN_VOCA, CLEAN_15000, C_CLEAN_APPEARANCES)
 
-    # ids_dict = create_all_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, CLEAN_15000)
+    # ids_dict = create_all_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, CLEAN_15000, A_CLEAN_MATRIX)
     # print(ids_dict[1461014])
-    # ids_dict = create_all_vec(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, CLEAN_15000)
+    # ids_dict = create_all_vec(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, CLEAN_15000, B_CLEAN_MATRIX)
     # print(ids_dict[2592098])
-    # ids_dict = create_all_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, CLEAN_15000)
+    # ids_dict = create_all_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, CLEAN_15000, C_CLEAN_MATRIX)
     # print(ids_dict[3036697])
+
+
 
     print("+++++finish+++++")
 
