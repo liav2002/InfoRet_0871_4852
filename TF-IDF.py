@@ -152,7 +152,6 @@ def create_all_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DOCS_PATH, X_CLEAN
 
     df = pd.DataFrame(list(ids_dict.items()), columns=['ID', 'Value'])
     df.to_excel(X_CLEAN_MATRIX, index=False)
-
     return ids_dict
 
 
@@ -197,14 +196,12 @@ def main():
     # in_how_many_docs_the_word_appear(B_CLEAN_LEN, B_CLEAN_VOCA, CLEAN_15000, B_CLEAN_APPEARANCES)
     # in_how_many_docs_the_word_appear(C_CLEAN_LEN, C_CLEAN_VOCA, CLEAN_15000, C_CLEAN_APPEARANCES)
 
-    ids_dict = create_all_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, CLEAN_15000, A_CLEAN_MATRIX)
-    print(ids_dict[1461014])
-    ids_dict = create_all_vec(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, CLEAN_15000, B_CLEAN_MATRIX)
-    print(ids_dict[2592098])
-    ids_dict = create_all_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, CLEAN_15000, C_CLEAN_MATRIX)
-    print(ids_dict[3036697])
-
-
+    # ids_dict = create_all_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, CLEAN_15000, A_CLEAN_MATRIX)
+    # print(ids_dict[1461014])
+    # ids_dict = create_all_vec(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, CLEAN_15000, B_CLEAN_MATRIX)
+    # print(ids_dict[2592098])
+    # ids_dict = create_all_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, CLEAN_15000, C_CLEAN_MATRIX)
+    # print(ids_dict[3036697])
 
     print("+++++finish+++++")
 
