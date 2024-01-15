@@ -7,41 +7,33 @@ from scipy.sparse import csr_matrix
 from scipy.sparse import coo_matrix
 
 
-CONTENT_COL  = 2
-ID_COL = 1
-A_START = 2
-A_FINISH = 5001
-B_START = 5006
-B_FINISH = 10005
-C_START = 10010
-C_FINISH = 15009
-SHEET = "Sheet1"
-CLEAN_15000 = ".\\data\\clean_15000.xlsx"
-
-
 # Data Cleaned From Punctuations and Stop-words Input
 DCPS_A_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_A.xlsx"
 DCPS_B_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_B.xlsx"
 DCPS_C_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_C.xlsx"
 
 # Output Destination Excels
-OUTPUT_A_EXCEL = "./output/bert_on_source/source_A_vec.xlsx"
-OUTPUT_B_EXCEL = "./output/bert_on_source/source_B_vec.xlsx"
-OUTPUT_C_EXCEL = "./output/bert_on_source/source_C_vec.xlsx"
+OUTPUT_A_EXCEL = "./output/tfidf_on_dcps/dcps_A_vec.xlsx"
+OUTPUT_B_EXCEL = "./output/tfidf_on_dcps/dcps_B_vec.xlsx"
+OUTPUT_C_EXCEL = "./output/tfidf_on_dcps/dcps_C_vec.xlsx"
 
-#Temp files for calculate TF-IDF.
-A_CLEAN_VOCA = ".\\nehorai_temp_files\\A_CLEAN_VOCA.xlsx"
-B_CLEAN_VOCA = ".\\nehorai_temp_files\\B_CLEAN_VOCA.xlsx"
-C_CLEAN_VOCA = ".\\nehorai_temp_files\\C_CLEAN_VOCA.xlsx"
-A_CLEAN_LEN = ".\\nehorai_temp_files\\A_CLEAN_LEN.xlsx"
-B_CLEAN_LEN = ".\\nehorai_temp_files\\B_CLEAN_LEN.xlsx"
-C_CLEAN_LEN = ".\\nehorai_temp_files\\C_CLEAN_LEN.xlsx"
+#Temp files for vocabulary.
+A_CLEAN_VOCA = "./nehorai_temp_files/A_CLEAN_VOCA.xlsx"
+B_CLEAN_VOCA = "./nehorai_temp_files/B_CLEAN_VOCA.xlsx"
+C_CLEAN_VOCA = "./nehorai_temp_files/C_CLEAN_VOCA.xlsx"
+
+#Temp files for documents length.
+A_CLEAN_LEN = "./nehorai_temp_files/A_CLEAN_LEN.xlsx"
+B_CLEAN_LEN = "./nehorai_temp_files/B_CLEAN_LEN.xlsx"
+C_CLEAN_LEN = "./nehorai_temp_files/C_CLEAN_LEN.xlsx"
+
+#Temp files for appearances (in how many document the word appear at least one time).
 A_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\A_CLEAN_APPEARANCES.xlsx"
 B_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\B_CLEAN_APPEARANCES.xlsx"
 C_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\C_CLEAN_APPEARANCES.xlsx"
-A_CLEAN_MATRIX = ".\\output\\nehorai_files\\A_CLEAN_MATRIX .xlsx"
-B_CLEAN_MATRIX = ".\\output\\nehorai_files\\B_CLEAN_MATRIX .xlsx"
-C_CLEAN_MATRIX = ".\\output\\nehorai_files\\C_CLEAN_MATRIX .xlsx"
+
+
+
 
 def get_voca(DCPS_X_PATH, X_CLEAN_VOCA):
     df = pd.read_excel(DCPS_X_PATH)
@@ -63,16 +55,13 @@ def count_words_in_cell(cell_value):
 def get_len(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
     # Read Excel file using pandas
     df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
-
     # Create a new DataFrame with only the required columns
     result_df = pd.DataFrame(columns=["מזהה/מספר הקובץ", "paragraph number of words"])
-
     # Iterate through the specified range and count words in each cell
     for index, row in df.iloc[start_row - 2:end_row - 1].iterrows():
         paragraph_id = row["מזהה/מספר הקובץ"]
         cell_value = row["תוכן הקובץ"]
         word_count = count_words_in_cell(str(cell_value))
-
         # Append the results to the new DataFrame
         result_df = pd.concat([result_df, pd.DataFrame({"מזהה/מספר הקובץ": [paragraph_id], "paragraph number of words": [word_count]})],
                               ignore_index=True)
@@ -197,9 +186,9 @@ def excel_to_dict(X_APPEARANCES):
 
 
 def main():
-    get_voca(DCPS_A_PATH, A_CLEAN_VOCA)
-    get_voca(DCPS_B_PATH, B_CLEAN_VOCA)
-    get_voca(DCPS_C_PATH, C_CLEAN_VOCA)
+    # get_voca(DCPS_A_PATH, A_CLEAN_VOCA)
+    # get_voca(DCPS_B_PATH, B_CLEAN_VOCA)
+    # get_voca(DCPS_C_PATH, C_CLEAN_VOCA)
 
     # get_len(CLEAN_15000, SHEET, A_START, A_FINISH, CONTENT_COL, A_CLEAN_LEN)
     # get_len(CLEAN_15000, SHEET, B_START, B_FINISH, CONTENT_COL, B_CLEAN_LEN)
