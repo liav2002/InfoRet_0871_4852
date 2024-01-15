@@ -1,5 +1,6 @@
 import pandas as pd
 from collections import Counter
+import math
 import numpy as np
 import string
 from scipy.sparse import csr_matrix
@@ -23,7 +24,7 @@ A_LEN_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\A_CLEAN_LEN.xlsx"
 B_LEN_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\B_CLEAN_LEN.xlsx"
 C_LEN_OUTPUT_PATH = "C:\\Users\\nehor\\Downloads\\C_CLEAN_LEN.xlsx"
 METRIX_A_PATH = "C:\\Users\\nehor\\Downloads\\METRIX_A.xlsx"
-
+A_APPEARANCES = ".\\output\\A_in_how_many_docs_the_word_appear.xlsx"
 
 def get_cells_in_range(excel_file_path, sheet_name, start_row, end_row, column_index, output_excel_path):
     column_values = pd.read_excel(excel_file_path, sheet_name=sheet_name, header=None, usecols=[column_index], skiprows=start_row-1, nrows=end_row-start_row+1)[column_index]
@@ -139,23 +140,30 @@ def list_to_dict(input_list):
 
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def create_all_vec(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, DOCS_PATH, output_path):
+def create_all_vec(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH, X_APPEARANCES,  DOCS_PATH, output_path):
     all_IDs, all_words = get_IDs_and_words(X_LEN_OUTPUT_PATH, X_OUTPUT_PATH)
     df = pd.read_excel(DOCS_PATH)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
     df = df.drop(columns=[df.columns[0], df.columns[3]])
     avgl = get_avgl(X_LEN_OUTPUT_PATH, all_IDs)
     ids_dict = {doc_id: {} for doc_id in all_IDs}
+    appearances_dict = excel_to_dict(X_APPEARANCES)
     for doc_id in all_IDs:
         if doc_id in df['מזהה/מספר הקובץ'].values:
             # Get the corresponding value in the "תוכן הקובץ" column
             content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'תוכן הקובץ'].iloc[0]
             doc_as_list = content_value.split()
+            # first iteration for doc freq (how many instances of the words exist in this doc)
             for word in doc_as_list:
                 if word in ids_dict[doc_id]:
                     ids_dict[doc_id][word] += 1
                 else:
                     ids_dict[doc_id][word] = 1
+
+            # second iteration for TF-IDF
+            for word in doc_as_list:
+                ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
+
     return ids_dict
 
 
@@ -164,6 +172,7 @@ def create_nested_dict(external_list, inner_list):
     for key in external_list:
         nested_dict[key] = {inner_key: None for inner_key in inner_list}
     return nested_dict
+
 
 def get_avgl(X_LEN_OUTPUT_PATH, all_IDs):
     sum = 0
@@ -174,6 +183,17 @@ def get_avgl(X_LEN_OUTPUT_PATH, all_IDs):
             content_value = df.loc[df['מזהה/מספר הקובץ'] == doc_id, 'paragraph number of words'].iloc[0]
             sum = sum + content_value
     return sum/(len(all_IDs))
+
+
+
+def excel_to_dict(X_APPEARANCES):
+    # Read the Excel file into a pandas DataFrame
+    df = pd.read_excel(X_APPEARANCES)
+
+    # Create a dictionary from the two columns
+    result_dict = dict(zip(df['Word'], df['Count']))
+
+    return result_dict
 
 
 def main():
@@ -192,7 +212,7 @@ def main():
     # in_how_many_docs_the_word_appear(B_LEN_OUTPUT_PATH, B_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\B_in_how_many_docs_the_word_appear.xlsx")
     # in_how_many_docs_the_word_appear(C_LEN_OUTPUT_PATH, C_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\C_in_how_many_docs_the_word_appear.xlsx")
 
-    ids_dict = create_all_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, FILE_PATH, "C:\\Users\\nehor\\Downloads\\A_draft.xlsx")
+    ids_dict = create_all_vec(A_LEN_OUTPUT_PATH, A_OUTPUT_PATH, A_APPEARANCES, FILE_PATH, "C:\\Users\\nehor\\Downloads\\A_draft.xlsx")
     print(ids_dict)
     print("Word frequency in the specified range:")
 
