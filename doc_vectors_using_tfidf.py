@@ -200,7 +200,7 @@ def generate_tfidf_vectors_and_save_2_excel(x_clean_len, x_clean_voca, x_appeara
             # second iteration for TF-IDF
             #  k is a positive constant controlling the term frequency saturation. Typical values are between 1.2 and 2.0. (ChatGPT)
             k = 1.5
-            b = 1
+            b = 0.65
             l = len(doc_as_list)
             unique_list = list(filter(lambda x: doc_as_list.count(x) == 1, doc_as_list))
             for word in unique_list:
