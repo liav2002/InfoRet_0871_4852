@@ -2,7 +2,8 @@ from Utills import *
 import pandas as pd
 from collections import Counter
 import math
-
+from openpyxl import load_workbook, Workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
 
 # Data Cleaned From Punctuations and Stop-words Input
 DCPS_A_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_A.xlsx"
@@ -14,22 +15,20 @@ OUTPUT_A_EXCEL = "./output/tfidf_on_dcps/dcps_A_vec.xlsx"
 OUTPUT_B_EXCEL = "./output/tfidf_on_dcps/dcps_B_vec.xlsx"
 OUTPUT_C_EXCEL = "./output/tfidf_on_dcps/dcps_C_vec.xlsx"
 
-#Temp files for vocabulary.
+# Temp files for vocabulary.
 A_CLEAN_VOCA = "./nehorai_temp_files/A_CLEAN_VOCA.xlsx"
 B_CLEAN_VOCA = "./nehorai_temp_files/B_CLEAN_VOCA.xlsx"
 C_CLEAN_VOCA = "./nehorai_temp_files/C_CLEAN_VOCA.xlsx"
 
-#Temp files for documents length.
+# Temp files for documents length.
 A_CLEAN_LEN = "./nehorai_temp_files/A_CLEAN_LEN.xlsx"
 B_CLEAN_LEN = "./nehorai_temp_files/B_CLEAN_LEN.xlsx"
 C_CLEAN_LEN = "./nehorai_temp_files/C_CLEAN_LEN.xlsx"
 
-#Temp files for appearances (in how many document the word appear at least one time).
+# Temp files for appearances (in how many document the word appear at least one time).
 A_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\A_CLEAN_APPEARANCES.xlsx"
 B_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\B_CLEAN_APPEARANCES.xlsx"
 C_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\C_CLEAN_APPEARANCES.xlsx"
-
-
 
 
 def get_voca(dcps_x_path, x_clean_voca):
@@ -76,7 +75,7 @@ def excel_column_to_list(excel_file):
 def get_IDs_and_words(x_clean_len, x_clean_voca):
     all_words = excel_column_to_list(x_clean_voca)
     all_IDs = excel_column_to_list(x_clean_len)
-    return  all_IDs, all_words
+    return all_IDs, all_words
 
 
 def get_appearances(x_clean_len, x_clean_voca, dcps_x_path, x_clean_appearances):
@@ -106,6 +105,78 @@ def list_to_dict(input_list):
     return result_dict
 
 
+def add_df_to_excel(df, excel_path, overwrite=False):
+    try:
+        if overwrite:
+            # If overwrite is True, simply write the DataFrame to the Excel file
+            df.to_excel(excel_path, index=False, header=True)
+            print(f"Data added successfully to {excel_path}")
+        else:
+            # Check if the Excel file exists
+            if os.path.isfile(excel_path):
+                # If it exists, read the existing DataFrame
+                existing_df = pd.read_excel(excel_path)
+
+                # Concatenate the existing and new DataFrames
+                result_df = pd.concat([existing_df, df], ignore_index=True)
+
+                # Save the concatenated DataFrame to the Excel file
+                result_df.to_excel(excel_path, index=False, header=True)
+                print(f"Data added successfully to {excel_path}")
+            else:
+                # If it doesn't exist, write the DataFrame to the Excel file
+                df.to_excel(excel_path, index=False, header=True)
+                print(f"Excel file created successfully at {excel_path}")
+
+    except Exception as e:
+        print(f"Error adding DataFrame to Excel file: {e}")
+
+
+def process_data_in_batches(data_dict, batch_size=100):
+    # Convert the dictionary to a list of tuples for easier slicing
+    data_items = list(data_dict.items())
+
+    total_files = len(data_items)
+    current_index = 0
+    columns_stored_in_df = ['file_id']
+
+    while current_index < total_files:
+        # Get the current batch of items
+        current_batch = data_items[current_index:current_index + batch_size]
+
+        # Create DataFrame structure with zero values for the current batch
+        df_data = {}
+        for _, (file_id, word_count_dict) in enumerate(current_batch):
+            # Intialized columns values:
+            for col in columns_stored_in_df:
+                if col in df_data.keys():
+                    df_data[col].append(0)
+                else:
+                    df_data[col] = [0]
+
+            # add file id
+            df_data['file_id'][-1] = file_id
+
+            # Update values based on actual counts
+            for word, count in word_count_dict.items():
+                column_name = f'count_{word}'
+                if column_name in df_data.keys():
+                    df_data[column_name][-1] = count  # Update the last element in the list
+                else:
+                    columns_stored_in_df.append(column_name)
+                    df_data[column_name] = [0] * len(df_data['file_id'])
+                    df_data[column_name][-1] = count
+
+
+        # Create DataFrame from the dictionary
+        df = pd.DataFrame(df_data)
+
+        # Increment the index for the next batch
+        current_index += batch_size
+
+        yield df
+
+
 def generate_tfidf_vectors_and_save_2_excel(x_clean_len, x_clean_voca, x_appearances, dcps_a_path, output_x_excel):
     all_IDs, all_words = get_IDs_and_words(x_clean_len, x_clean_voca)
     df = pd.read_excel(dcps_a_path)
@@ -126,7 +197,6 @@ def generate_tfidf_vectors_and_save_2_excel(x_clean_len, x_clean_voca, x_appeara
                 else:
                     ids_dict[doc_id][word] = 1
 
-
             # second iteration for TF-IDF
             #  k is a positive constant controlling the term frequency saturation. Typical values are between 1.2 and 2.0. (ChatGPT)
             k = 1.5
@@ -134,26 +204,48 @@ def generate_tfidf_vectors_and_save_2_excel(x_clean_len, x_clean_voca, x_appeara
             l = len(doc_as_list)
             unique_list = list(filter(lambda x: doc_as_list.count(x) == 1, doc_as_list))
             for word in unique_list:
-                TF_IDF = (math.log10(5001/appearances_dict[word]))*ids_dict[doc_id][word]
-                normalize = (1-b+((b*l)/avgl))
-                BM25 = (k+1)/((ids_dict[doc_id][word])+(k*normalize))
+                TF_IDF = (math.log10(5001 / appearances_dict[word])) * ids_dict[doc_id][word]
+                normalize = (1 - b + ((b * l) / avgl))
+                BM25 = (k + 1) / ((ids_dict[doc_id][word]) + (k * normalize))
                 ids_dict[doc_id][word] = round((TF_IDF * BM25), 4)
                 # ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
 
     print("Finish to create the dictionary.")
     print("Try to save the excel matrix.")
-    #++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    df_matrix = pd.DataFrame.from_dict(ids_dict, orient='index')
-    # Transpose the DataFrame
-    df_transposed = df_matrix.transpose()
-    # Write transposed DataFrame to Excel file
-    df_transposed.to_excel(output_x_excel, index=True)
+    # ++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # Specify the columns you want to store in the DataFrame
+    # Initialize it with any existing columns if needed
+    columns_stored_in_df = ['file_id']
+
+    # Important constants for the operation
+    BATCH = 100
+    NUMBER_OF_DOCS = 5000
+
+    # Iterate over batches and add data to Excel
+    i = 0
+    batch_progress = 0
+    for i in range(NUMBER_OF_DOCS // BATCH):
+        batch_df = next(process_data_in_batches(ids_dict, batch_size=BATCH))
+
+        # DEBUG: Print the first 5 rows of the DataFrame
+        # print(batch_df.head())
+        # input("Press any key for continue...")
+
+        if i == 0:
+            add_df_to_excel(batch_df, output_x_excel, overwrite=True)
+        else:
+            add_df_to_excel(batch_df, output_x_excel, overwrite=False)
+
+        i += 1
+        batch_progress += 100
+        print(f"Iteration {i} finished, batch progress: {batch_progress}")
+
     # ++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    #++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # ++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # df = pd.DataFrame(list(ids_dict.items()), columns=['file_id', 'content'])
     # df.to_excel(OUTPUT_X_EXCEL, index=False)
-    #++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # ++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
     print(f"Result saved in: {output_x_excel}")
 
 
@@ -172,7 +264,7 @@ def get_avgl(x_clean_name, all_IDs):
             # Get the corresponding value in the "תוכן הקובץ" column
             content_value = df.loc[df['file_id'] == doc_id, 'paragraph number of words'].iloc[0]
             sum = sum + content_value
-    return sum/(len(all_IDs))
+    return sum / (len(all_IDs))
 
 
 def excel_to_dict(x_appearances):
@@ -187,23 +279,29 @@ def excel_to_dict(x_appearances):
 
 def main():
     if not all_files_exist([A_CLEAN_VOCA, B_CLEAN_VOCA, C_CLEAN_VOCA]):
+        print("Generate voca files.")
         get_voca(DCPS_A_PATH, A_CLEAN_VOCA)
         get_voca(DCPS_B_PATH, B_CLEAN_VOCA)
         get_voca(DCPS_C_PATH, C_CLEAN_VOCA)
 
     if not all_files_exist([A_CLEAN_LEN, B_CLEAN_LEN, C_CLEAN_LEN]):
+        print("Generate clean len files.")
         get_len(DCPS_A_PATH, A_CLEAN_LEN)
         get_len(DCPS_B_PATH, B_CLEAN_LEN)
         get_len(DCPS_C_PATH, C_CLEAN_LEN)
 
     if not all_files_exist([A_CLEAN_APPEARANCES, B_CLEAN_APPEARANCES, C_CLEAN_APPEARANCES]):
+        print("Generate appearances files.")
         get_appearances(A_CLEAN_LEN, A_CLEAN_VOCA, DCPS_A_PATH, A_CLEAN_APPEARANCES)
         get_appearances(B_CLEAN_LEN, B_CLEAN_VOCA, DCPS_B_PATH, B_CLEAN_APPEARANCES)
         get_appearances(C_CLEAN_LEN, C_CLEAN_VOCA, DCPS_C_PATH, C_CLEAN_APPEARANCES)
 
     # try run with the recommended option in generate_tfidf_vectors_and_save_2_excel().
+    print(f"Creating tfidf vectors for {OUTPUT_A_EXCEL}")
     generate_tfidf_vectors_and_save_2_excel(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, DCPS_A_PATH, OUTPUT_A_EXCEL)
+    print(f"Creating tfidf vectors for {OUTPUT_B_EXCEL}")
     generate_tfidf_vectors_and_save_2_excel(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, DCPS_B_PATH, OUTPUT_B_EXCEL)
+    print(f"Creating tfidf vectors for {OUTPUT_C_EXCEL}")
     generate_tfidf_vectors_and_save_2_excel(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, DCPS_C_PATH, OUTPUT_C_EXCEL)
 
     print("+++++finish+++++")
