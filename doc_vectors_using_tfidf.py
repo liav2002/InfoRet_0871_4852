@@ -2,10 +2,6 @@ from Utills import *
 import pandas as pd
 from collections import Counter
 import math
-import numpy as np
-import string
-from scipy.sparse import csr_matrix
-from scipy.sparse import coo_matrix
 
 
 # Data Cleaned From Punctuations and Stop-words Input
@@ -36,15 +32,15 @@ C_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\C_CLEAN_APPEARANCES.xlsx"
 
 
 
-def get_voca(DCPS_X_PATH, X_CLEAN_VOCA):
-    df = pd.read_excel(DCPS_X_PATH)
+def get_voca(dcps_x_path, x_clean_voca):
+    df = pd.read_excel(dcps_x_path)
     column_values = df["content"]
     all_text = ' '.join(map(str, column_values))
     word_frequency = Counter(all_text.split())
     result_list = list(word_frequency.items())
     result_list.sort(key=lambda x: x[1], reverse=True)
     df_output = pd.DataFrame(result_list, columns=["Word", "Count"])
-    df_output.to_excel(X_CLEAN_VOCA, index=False)
+    df_output.to_excel(x_clean_voca, index=False)
 
 
 def count_words_in_cell(cell_value):
@@ -53,9 +49,9 @@ def count_words_in_cell(cell_value):
     return len(words)
 
 
-def get_len(DCPS_X_PATH, X_CLEAN_LEN):
+def get_len(dcps_x_path, x_clean_len):
     # Read Excel file using pandas
-    df = pd.read_excel(DCPS_X_PATH)
+    df = pd.read_excel(dcps_x_path)
     # Create a new DataFrame with only the required columns
     result_df = pd.DataFrame(columns=["file_id", "paragraph number of words"])
     # Iterate through the DataFrame and count words in each cell
@@ -68,7 +64,7 @@ def get_len(DCPS_X_PATH, X_CLEAN_LEN):
             [result_df, pd.DataFrame({"file_id": [paragraph_id], "paragraph number of words": [word_count]})],
             ignore_index=True)
     # Write the new DataFrame to a new Excel file
-    result_df.to_excel(X_CLEAN_LEN, index=False)
+    result_df.to_excel(x_clean_len, index=False)
 
 
 def excel_column_to_list(excel_file):
@@ -77,15 +73,15 @@ def excel_column_to_list(excel_file):
     return first_column_values
 
 
-def get_IDs_and_words(X_CLEAN_LEN, X_CLEAN_VOCA):
-    all_words = excel_column_to_list(X_CLEAN_VOCA)
-    all_IDs = excel_column_to_list(X_CLEAN_LEN)
+def get_IDs_and_words(x_clean_len, x_clean_voca):
+    all_words = excel_column_to_list(x_clean_voca)
+    all_IDs = excel_column_to_list(x_clean_len)
     return  all_IDs, all_words
 
 
-def get_appearances(X_CLEAN_LEN, X_CLEAN_VOCA, DCPS_X_PATH, X_CLEAN_APPEARANCES):
-    all_IDs, all_words = get_IDs_and_words(X_CLEAN_LEN, X_CLEAN_VOCA)
-    df = pd.read_excel(DCPS_X_PATH)
+def get_appearances(x_clean_len, x_clean_voca, dcps_x_path, x_clean_appearances):
+    all_IDs, all_words = get_IDs_and_words(x_clean_len, x_clean_voca)
+    df = pd.read_excel(dcps_x_path)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
     df = df.drop(columns=[df.columns[0]])
     words_dict = dict.fromkeys(all_words, 0)
@@ -101,7 +97,7 @@ def get_appearances(X_CLEAN_LEN, X_CLEAN_VOCA, DCPS_X_PATH, X_CLEAN_APPEARANCES)
                     current_doc_dict[word] = 1
 
     df = pd.DataFrame(list(words_dict.items()), columns=['Word', 'Count'])
-    df.to_excel(X_CLEAN_APPEARANCES, index=False)
+    df.to_excel(x_clean_appearances, index=False)
 
 
 def list_to_dict(input_list):
@@ -110,14 +106,14 @@ def list_to_dict(input_list):
     return result_dict
 
 
-def generate_tfidf_vectors_and_save_2_excel(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES, DCPS_X_PATH, OUTPUT_X_EXCEL):
-    all_IDs, all_words = get_IDs_and_words(X_CLEAN_LEN, X_CLEAN_VOCA)
-    df = pd.read_excel(DCPS_X_PATH)
+def generate_tfidf_vectors_and_save_2_excel(x_clean_len, x_clean_voca, x_appearances, dcps_a_path, output_x_excel):
+    all_IDs, all_words = get_IDs_and_words(x_clean_len, x_clean_voca)
+    df = pd.read_excel(dcps_a_path)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
     df = df.drop(columns=[df.columns[0]])
-    avgl = get_avgl(X_CLEAN_LEN, all_IDs)
+    avgl = get_avgl(x_clean_len, all_IDs)
     ids_dict = {doc_id: {} for doc_id in all_IDs}
-    appearances_dict = excel_to_dict(X_APPEARANCES)
+    appearances_dict = excel_to_dict(x_appearances)
     for doc_id in all_IDs:
         if doc_id in df['file_id'].values:
             # Get the corresponding value in the "תוכן הקובץ" column
@@ -144,20 +140,21 @@ def generate_tfidf_vectors_and_save_2_excel(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARA
                 ids_dict[doc_id][word] = round((TF_IDF * BM25), 4)
                 # ids_dict[doc_id][word] = round(math.log10(5001/ids_dict[doc_id][word]), 3)
 
-
+    print("Finish to create the dictionary.")
+    print("Try to save the excel matrix.")
     #++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # df_matrix = pd.DataFrame.from_dict(ids_dict, orient='index')
-    # # Transpose the DataFrame
-    # df_transposed = df_matrix.transpose()
-    # # Write transposed DataFrame to Excel file
-    # df_transposed.to_excel(OUTPUT_X_EXCEL, index=True)
+    df_matrix = pd.DataFrame.from_dict(ids_dict, orient='index')
+    # Transpose the DataFrame
+    df_transposed = df_matrix.transpose()
+    # Write transposed DataFrame to Excel file
+    df_transposed.to_excel(output_x_excel, index=True)
     # ++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     #++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    df = pd.DataFrame(list(ids_dict.items()), columns=['file_id', 'content'])
-    df.to_excel(OUTPUT_X_EXCEL, index=False)
+    # df = pd.DataFrame(list(ids_dict.items()), columns=['file_id', 'content'])
+    # df.to_excel(OUTPUT_X_EXCEL, index=False)
     #++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+    print(f"Result saved in: {output_x_excel}")
 
 
 def create_nested_dict(external_list, inner_list):
@@ -167,9 +164,9 @@ def create_nested_dict(external_list, inner_list):
     return nested_dict
 
 
-def get_avgl(X_CLEAN_LEN, all_IDs):
+def get_avgl(x_clean_name, all_IDs):
     sum = 0
-    df = pd.read_excel(X_CLEAN_LEN)
+    df = pd.read_excel(x_clean_name)
     for doc_id in all_IDs:
         if doc_id in df['file_id'].values:
             # Get the corresponding value in the "תוכן הקובץ" column
@@ -178,9 +175,9 @@ def get_avgl(X_CLEAN_LEN, all_IDs):
     return sum/(len(all_IDs))
 
 
-def excel_to_dict(X_APPEARANCES):
+def excel_to_dict(x_appearances):
     # Read the Excel file into a pandas DataFrame
-    df = pd.read_excel(X_APPEARANCES)
+    df = pd.read_excel(x_appearances)
 
     # Create a dictionary from the two columns
     result_dict = dict(zip(df['Word'], df['Count']))
