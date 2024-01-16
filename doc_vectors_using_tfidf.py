@@ -212,39 +212,39 @@ def generate_tfidf_vectors_and_save_2_excel(x_clean_len, x_clean_voca, x_appeara
 
     print("Finish to create the dictionary.")
     print("Try to save the excel matrix.")
+
     # ++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # Specify the columns you want to store in the DataFrame
-    # Initialize it with any existing columns if needed
-    columns_stored_in_df = ['file_id']
-
-    # Important constants for the operation
-    BATCH = 100
-    NUMBER_OF_DOCS = 5000
-
-    # Iterate over batches and add data to Excel
-    i = 0
-    batch_progress = 0
-    for i in range(NUMBER_OF_DOCS // BATCH):
-        batch_df = next(process_data_in_batches(ids_dict, batch_size=BATCH))
-
-        # DEBUG: Print the first 5 rows of the DataFrame
-        # print(batch_df.head())
-        # input("Press any key for continue...")
-
-        if i == 0:
-            add_df_to_excel(batch_df, output_x_excel, overwrite=True)
-        else:
-            add_df_to_excel(batch_df, output_x_excel, overwrite=False)
-
-        i += 1
-        batch_progress += 100
-        print(f"Iteration {i} finished, batch progress: {batch_progress}")
-
+    # # Specify the columns you want to store in the DataFrame
+    # # Initialize it with any existing columns if needed
+    # columns_stored_in_df = ['file_id']
+    #
+    # # Important constants for the operation
+    # BATCH = 100
+    # NUMBER_OF_DOCS = 5000
+    #
+    # # Iterate over batches and add data to Excel
+    # i = 0
+    # batch_progress = 0
+    # for i in range(NUMBER_OF_DOCS // BATCH):
+    #     batch_df = next(process_data_in_batches(ids_dict, batch_size=BATCH))
+    #
+    #     # DEBUG: Print the first 5 rows of the DataFrame
+    #     # print(batch_df.head())
+    #     # input("Press any key for continue...")
+    #
+    #     if i == 0:
+    #         add_df_to_excel(batch_df, output_x_excel, overwrite=True)
+    #     else:
+    #         add_df_to_excel(batch_df, output_x_excel, overwrite=False)
+    #
+    #     i += 1
+    #     batch_progress += 100
+    #     print(f"Iteration {i} finished, batch progress: {batch_progress}")
     # ++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     # ++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # df = pd.DataFrame(list(ids_dict.items()), columns=['file_id', 'content'])
-    # df.to_excel(OUTPUT_X_EXCEL, index=False)
+    df = pd.DataFrame(list(ids_dict.items()), columns=['file_id', 'content'])
+    df.to_excel(output_x_excel, index=False)
     # ++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
     print(f"Result saved in: {output_x_excel}")
 
