@@ -1,3 +1,4 @@
+from Utills import *
 import pandas as pd
 from collections import Counter
 import math
@@ -109,7 +110,7 @@ def list_to_dict(input_list):
     return result_dict
 
 
-def get_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DCPS_X_PATH, OUTPUT_X_EXCEL):
+def generate_tfidf_vectors_and_save_2_excel(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES, DCPS_X_PATH, OUTPUT_X_EXCEL):
     all_IDs, all_words = get_IDs_and_words(X_CLEAN_LEN, X_CLEAN_VOCA)
     df = pd.read_excel(DCPS_X_PATH)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
@@ -150,13 +151,11 @@ def get_vec(X_CLEAN_LEN, X_CLEAN_VOCA, X_APPEARANCES,  DCPS_X_PATH, OUTPUT_X_EXC
     # df_transposed = df_matrix.transpose()
     # # Write transposed DataFrame to Excel file
     # df_transposed.to_excel(OUTPUT_X_EXCEL, index=True)
-    # return ids_dict
     # ++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     #++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
     df = pd.DataFrame(list(ids_dict.items()), columns=['file_id', 'content'])
     df.to_excel(OUTPUT_X_EXCEL, index=False)
-    return ids_dict
     #++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -190,22 +189,25 @@ def excel_to_dict(X_APPEARANCES):
 
 
 def main():
-    # get_voca(DCPS_A_PATH, A_CLEAN_VOCA)
-    # get_voca(DCPS_B_PATH, B_CLEAN_VOCA)
-    # get_voca(DCPS_C_PATH, C_CLEAN_VOCA)
+    if not all_files_exist([A_CLEAN_VOCA, B_CLEAN_VOCA, C_CLEAN_VOCA]):
+        get_voca(DCPS_A_PATH, A_CLEAN_VOCA)
+        get_voca(DCPS_B_PATH, B_CLEAN_VOCA)
+        get_voca(DCPS_C_PATH, C_CLEAN_VOCA)
 
-    # get_len(DCPS_A_PATH, A_CLEAN_LEN)
-    # get_len(DCPS_B_PATH, B_CLEAN_LEN)
-    # get_len(DCPS_C_PATH, C_CLEAN_LEN)
+    if not all_files_exist([A_CLEAN_LEN, B_CLEAN_LEN, C_CLEAN_LEN]):
+        get_len(DCPS_A_PATH, A_CLEAN_LEN)
+        get_len(DCPS_B_PATH, B_CLEAN_LEN)
+        get_len(DCPS_C_PATH, C_CLEAN_LEN)
 
-    # get_appearances(A_CLEAN_LEN, A_CLEAN_VOCA, DCPS_A_PATH, A_CLEAN_APPEARANCES)
-    # get_appearances(B_CLEAN_LEN, B_CLEAN_VOCA, DCPS_B_PATH, B_CLEAN_APPEARANCES)
-    # get_appearances(C_CLEAN_LEN, C_CLEAN_VOCA, DCPS_C_PATH, C_CLEAN_APPEARANCES)
+    if not all_files_exist([A_CLEAN_APPEARANCES, B_CLEAN_APPEARANCES, C_CLEAN_APPEARANCES]):
+        get_appearances(A_CLEAN_LEN, A_CLEAN_VOCA, DCPS_A_PATH, A_CLEAN_APPEARANCES)
+        get_appearances(B_CLEAN_LEN, B_CLEAN_VOCA, DCPS_B_PATH, B_CLEAN_APPEARANCES)
+        get_appearances(C_CLEAN_LEN, C_CLEAN_VOCA, DCPS_C_PATH, C_CLEAN_APPEARANCES)
 
-    # try run with the recommended option in get_vec().
-    vec = get_vec(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, DCPS_A_PATH, OUTPUT_A_EXCEL)
-    vec = get_vec(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, DCPS_B_PATH, OUTPUT_B_EXCEL)
-    vec = get_vec(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, DCPS_C_PATH, OUTPUT_C_EXCEL)
+    # try run with the recommended option in generate_tfidf_vectors_and_save_2_excel().
+    generate_tfidf_vectors_and_save_2_excel(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, DCPS_A_PATH, OUTPUT_A_EXCEL)
+    generate_tfidf_vectors_and_save_2_excel(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, DCPS_B_PATH, OUTPUT_B_EXCEL)
+    generate_tfidf_vectors_and_save_2_excel(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, DCPS_C_PATH, OUTPUT_C_EXCEL)
 
     print("+++++finish+++++")
 
