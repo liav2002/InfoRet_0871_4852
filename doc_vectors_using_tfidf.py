@@ -2,8 +2,6 @@ from Utills import *
 import pandas as pd
 from collections import Counter
 import math
-from openpyxl import load_workbook, Workbook
-from openpyxl.utils.dataframe import dataframe_to_rows
 
 # Data Cleaned From Punctuations and Stop-words Input
 DCPS_A_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_A.xlsx"
@@ -14,6 +12,11 @@ DCPS_C_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_C.xlsx"
 OUTPUT_A_EXCEL = "./output/tfidf_on_dcps/dcps_A_vec.xlsx"
 OUTPUT_B_EXCEL = "./output/tfidf_on_dcps/dcps_B_vec.xlsx"
 OUTPUT_C_EXCEL = "./output/tfidf_on_dcps/dcps_C_vec.xlsx"
+
+# Output Destination Excels
+OUTPUT_A_HDF5 = "./output/tfidf_on_dcps/dcps_A_vec.h5"
+OUTPUT_B_HDF5 = "./output/tfidf_on_dcps/dcps_B_vec.h5"
+OUTPUT_C_HDF5 = "./output/tfidf_on_dcps/dcps_C_vec.h5"
 
 # Temp files for vocabulary.
 A_CLEAN_VOCA = "./nehorai_temp_files/A_CLEAN_VOCA.xlsx"
@@ -105,28 +108,20 @@ def list_to_dict(input_list):
     return result_dict
 
 
-def add_df_to_excel(df, excel_path, overwrite=False):
+def add_df_to_hdf5(df, file_path, overwrite=False):
     try:
+        df = df.transpose()
+
         if overwrite:
-            # If overwrite is True, simply write the DataFrame to the Excel file
-            df.to_excel(excel_path, index=False, header=True)
-            print(f"Data added successfully to {excel_path}")
-        else:
-            # Check if the Excel file exists
-            if os.path.isfile(excel_path):
-                # If it exists, read the existing DataFrame
-                existing_df = pd.read_excel(excel_path)
+            # If overwrite is True, simply write the DataFrame to the HDF5 file
+            df.to_hdf(file_path, key="Sheet1", mode='w', format='table', index=False)
+            print(f"Data overwritten successfully in {file_path}")
+            return
 
-                # Concatenate the existing and new DataFrames
-                result_df = pd.concat([existing_df, df], ignore_index=True)
+        # Append DataFrame to the HDF5 file
+        df.to_hdf(file_path, key="Sheet1", mode='a', format='table', append=True)
+        print(f"Data added successfully to {file_path}")
 
-                # Save the concatenated DataFrame to the Excel file
-                result_df.to_excel(excel_path, index=False, header=True)
-                print(f"Data added successfully to {excel_path}")
-            else:
-                # If it doesn't exist, write the DataFrame to the Excel file
-                df.to_excel(excel_path, index=False, header=True)
-                print(f"Excel file created successfully at {excel_path}")
 
     except Exception as e:
         print(f"Error adding DataFrame to Excel file: {e}")
@@ -177,7 +172,7 @@ def process_data_in_batches(data_dict, batch_size=100):
         yield df
 
 
-def generate_tfidf_vectors_and_save_2_excel(x_clean_len, x_clean_voca, x_appearances, dcps_a_path, output_x_excel):
+def generate_tfidf_vectors_and_save_2_h5(x_clean_len, x_clean_voca, x_appearances, dcps_a_path, output_file):
     all_IDs, all_words = get_IDs_and_words(x_clean_len, x_clean_voca)
     df = pd.read_excel(dcps_a_path)
     # Drop the first and fourth columns and stay only "תוכן הקובץ" and "מזהה/מספר הקובץ"
@@ -214,39 +209,35 @@ def generate_tfidf_vectors_and_save_2_excel(x_clean_len, x_clean_voca, x_appeara
     print("Try to save the excel matrix.")
 
     # ++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # # Specify the columns you want to store in the DataFrame
-    # # Initialize it with any existing columns if needed
-    # columns_stored_in_df = ['file_id']
-    #
-    # # Important constants for the operation
-    # BATCH = 100
-    # NUMBER_OF_DOCS = 5000
-    #
-    # # Iterate over batches and add data to Excel
-    # i = 0
-    # batch_progress = 0
-    # for i in range(NUMBER_OF_DOCS // BATCH):
-    #     batch_df = next(process_data_in_batches(ids_dict, batch_size=BATCH))
-    #
-    #     # DEBUG: Print the first 5 rows of the DataFrame
-    #     # print(batch_df.head())
-    #     # input("Press any key for continue...")
-    #
-    #     if i == 0:
-    #         add_df_to_excel(batch_df, output_x_excel, overwrite=True)
-    #     else:
-    #         add_df_to_excel(batch_df, output_x_excel, overwrite=False)
-    #
-    #     i += 1
-    #     batch_progress += 100
-    #     print(f"Iteration {i} finished, batch progress: {batch_progress}")
+    # Important constants for the operation
+    BATCH = 100
+    NUMBER_OF_DOCS = 5000
+
+    # Iterate over batches and add data to Excel
+    i = 0
+    batch_progress = 0
+    for i in range(NUMBER_OF_DOCS // BATCH):
+        batch_df = next(process_data_in_batches(ids_dict, batch_size=BATCH))
+
+        # DEBUG: Print the first 5 rows of the DataFrame
+        # print(batch_df.head())
+        # input("Press any key for continue...")
+
+        if i == 0:
+            add_df_to_hdf5(batch_df, output_file, overwrite=True)
+        else:
+            add_df_to_hdf5(batch_df, output_file, overwrite=False)
+
+        i += 1
+        batch_progress += 100
+        print(f"Iteration {i} finished, batch progress: {batch_progress}")
     # ++++++++++++++++++++++++++++++++++++++ Recommended option, A lot of RAM is required ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     # ++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    df = pd.DataFrame(list(ids_dict.items()), columns=['file_id', 'content'])
-    df.to_excel(output_x_excel, index=False)
+    # df = pd.DataFrame(list(ids_dict.items()), columns=['file_id', 'content'])
+    # df.to_excel(output_x_excel, index=False)
     # ++++++++++++++++++++++++++++++++++++++ Alternation option ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    print(f"Result saved in: {output_x_excel}")
+    print(f"Result saved in: {output_file}")
 
 
 def create_nested_dict(external_list, inner_list):
@@ -296,13 +287,13 @@ def main():
         get_appearances(B_CLEAN_LEN, B_CLEAN_VOCA, DCPS_B_PATH, B_CLEAN_APPEARANCES)
         get_appearances(C_CLEAN_LEN, C_CLEAN_VOCA, DCPS_C_PATH, C_CLEAN_APPEARANCES)
 
-    # try run with the recommended option in generate_tfidf_vectors_and_save_2_excel().
-    print(f"Creating tfidf vectors for {OUTPUT_A_EXCEL}")
-    generate_tfidf_vectors_and_save_2_excel(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, DCPS_A_PATH, OUTPUT_A_EXCEL)
-    print(f"Creating tfidf vectors for {OUTPUT_B_EXCEL}")
-    generate_tfidf_vectors_and_save_2_excel(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, DCPS_B_PATH, OUTPUT_B_EXCEL)
-    print(f"Creating tfidf vectors for {OUTPUT_C_EXCEL}")
-    generate_tfidf_vectors_and_save_2_excel(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, DCPS_C_PATH, OUTPUT_C_EXCEL)
+    # try run with the recommended option in generate_tfidf_vectors_and_save_2_h5().
+    print(f"Creating tfidf vectors for {OUTPUT_A_HDF5}")
+    generate_tfidf_vectors_and_save_2_h5(A_CLEAN_LEN, A_CLEAN_VOCA, A_CLEAN_APPEARANCES, DCPS_A_PATH, OUTPUT_A_HDF5)
+    print(f"Creating tfidf vectors for {OUTPUT_B_HDF5}")
+    generate_tfidf_vectors_and_save_2_h5(B_CLEAN_LEN, B_CLEAN_VOCA, B_CLEAN_APPEARANCES, DCPS_B_PATH, OUTPUT_B_HDF5)
+    print(f"Creating tfidf vectors for {OUTPUT_C_HDF5}")
+    generate_tfidf_vectors_and_save_2_h5(C_CLEAN_LEN, C_CLEAN_VOCA, C_CLEAN_APPEARANCES, DCPS_C_PATH, OUTPUT_C_HDF5)
 
     print("+++++finish+++++")
 
