@@ -166,6 +166,7 @@ Task1/output/tfidf_on_dcps/dcps_B_vec.h5
 Task1/output/tfidf_on_dcps/dcps_C_vec.h5
 Task2/data/d2v_on_source/d2v_source_A_docvec.xlsx
 Task2/data/d2v_on_source/d2v_source_B_docvec.xlsx
+Task2/data/d2v_on_source/d2v_source_C_docvec.xlsx
 Task2/data/tfidf_on_lemots/tfidf_lemots_A_docvec.xlsx
 Task2/data/tfidf_on_lemots/tfidf_lemots_B_docvec.xlsx
 Task2/data/tfidf_on_lemots/tfidf_lemots_C_docvec.xlsx
