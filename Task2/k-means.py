@@ -198,15 +198,15 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
 
 
 def main():
-    # # K-means for bert_on_source vectors
-    # print("Create output for 'Bert_On_Source' doc vectors.")
-    # create_output_for_groups(BERT_SOURCE_A_VECTORS, BERT_SOURCE_B_VECTORS, BERT_SOURCE_C_VECTORS,
-    #                          output_folder=BERT_SOURCE_OUTPUT_FOLDER)
+    # K-means for bert_on_source vectors
+    print("Create output for 'Bert_On_Source' doc vectors.")
+    create_output_for_groups(BERT_SOURCE_A_VECTORS, BERT_SOURCE_B_VECTORS, BERT_SOURCE_C_VECTORS,
+                             output_folder=BERT_SOURCE_OUTPUT_FOLDER)
 
-    # # K-means for d2v_on_source vectors
-    # print("Create output for 'D2V_On_Source' doc vectors.")
-    # create_output_for_groups(D2V_SOURCE_A_VECTORS, D2V_SOURCE_B_VECTORS, D2V_SOURCE_C_VECTORS,
-    #                          output_folder=D2V_SOURCE_OUTPUT_FOLDER)
+    # K-means for d2v_on_source vectors
+    print("Create output for 'D2V_On_Source' doc vectors.")
+    create_output_for_groups(D2V_SOURCE_A_VECTORS, D2V_SOURCE_B_VECTORS, D2V_SOURCE_C_VECTORS,
+                             output_folder=D2V_SOURCE_OUTPUT_FOLDER)
 
     # K-means for tfidf_on_lemots vectors
     print("Create output for 'TFIDF_On_Lemots' doc vectors.")
