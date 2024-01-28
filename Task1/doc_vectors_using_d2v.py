@@ -6,19 +6,19 @@ import json
 from time import sleep
 
 # Source Data Input Files
-INPUT_SOURCE_A = "./input/source_data/original_A.xlsx"
-INPUT_SOURCE_B = "./input/source_data/original_B.xlsx"
-INPUT_SOURCE_C = "./input/source_data/original_C.xlsx"
+INPUT_SOURCE_A = "./Task1/input/source_data/original_A.xlsx"
+INPUT_SOURCE_B = "./Task1/input/source_data/original_B.xlsx"
+INPUT_SOURCE_C = "./Task1/input/source_data/original_C.xlsx"
 
 # Output Destination JSONs
-OUTPUT_A_JSON = "./output/d2c_on_source/source_A_vec.json"
-OUTPUT_B_JSON = "./output/d2c_on_source/source_B_vec.json"
-OUTPUT_C_JSON = "./output/d2c_on_source/source_C_vec.json"
+OUTPUT_A_JSON = "./Task1/output/d2c_on_source/source_A_vec.json"
+OUTPUT_B_JSON = "./Task1/output/d2c_on_source/source_B_vec.json"
+OUTPUT_C_JSON = "./Task1/output/d2c_on_source/source_C_vec.json"
 
 # Output Destination Excels
-OUTPUT_A_EXCEL = "./output/d2c_on_source/source_A_vec.xlsx"
-OUTPUT_B_EXCEL = "./output/d2c_on_source/source_B_vec.xlsx"
-OUTPUT_C_EXCEL = "./output/d2c_on_source/source_C_vec.xlsx"
+OUTPUT_A_EXCEL = "./Task1/output/d2c_on_source/source_A_vec.xlsx"
+OUTPUT_B_EXCEL = "./Task1/output/d2c_on_source/source_B_vec.xlsx"
+OUTPUT_C_EXCEL = "./Task1/output/d2c_on_source/source_C_vec.xlsx"
 
 
 def generate_document_vector(doc):

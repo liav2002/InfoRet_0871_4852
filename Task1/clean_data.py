@@ -7,12 +7,12 @@ import json
 import time
 
 # GLOBAL VARIABLES
-SOURCE_DATA = "./data/15000.xlsx"
-DATA_CLEANED_FROM_PUNCTUATIONS = "./data/clean_punctuations_15000.xlsx"
-DATA_CLEANED_FROM_STOPWORDS = "./data/full_clean_15000.xlsx"
+SOURCE_DATA = "./Task1/data/15000.xlsx"
+DATA_CLEANED_FROM_PUNCTUATIONS = "./Task1/data/clean_punctuations_15000.xlsx"
+DATA_CLEANED_FROM_STOPWORDS = "./Task1/data/full_clean_15000.xlsx"
 OSCAR_DIRECTORY_PATH = "C:/Users/liavm/OneDrive - g.jct.ac.il/Year D/Annual courses/Bert2Vec - Final Project/Task 2 - Find Datasets of ABG Traning/OSCAR/"
-STOP_WORDS_OSCAR_JSON = "./stop_words/stopwords_from_oscar.json"
-STOP_WORDS_WIKI_CSV = "./stop_words/top_3000_most_freq_wiki.csv"
+STOP_WORDS_OSCAR_JSON = "./Task1/stop_words/stopwords_from_oscar.json"
+STOP_WORDS_WIKI_CSV = "./Task1/stop_words/top_3000_most_freq_wiki.csv"
 
 
 ####################################################################################################################

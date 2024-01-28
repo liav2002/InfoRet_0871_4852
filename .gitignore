@@ -158,11 +158,9 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
-hebpipe_whl/
-model/
-output/bert_on_source/source_A_vec.json
-output/bert_on_source/source_B_vec.json
-output/bert_on_source/source_C_vec.json
-output/tfidf_on_dcps/dcps_A_vec.h5
-output/tfidf_on_dcps/dcps_B_vec.h5
-output/tfidf_on_dcps/dcps_C_vec.h5
+Task1/output/bert_on_source/source_A_vec.json
+Task1/output/bert_on_source/source_B_vec.json
+Task1/output/bert_on_source/source_C_vec.json
+Task1/output/tfidf_on_dcps/dcps_A_vec.h5
+Task1/output/tfidf_on_dcps/dcps_B_vec.h5
+Task1/output/tfidf_on_dcps/dcps_C_vec.h5

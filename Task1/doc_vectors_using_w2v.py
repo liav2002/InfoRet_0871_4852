@@ -6,47 +6,47 @@ import json
 from time import sleep
 
 # Data Cleaned From Punctuations and Stop-words Input
-DCPS_A_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_A.xlsx"
-DCPS_B_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_B.xlsx"
-DCPS_C_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_C.xlsx"
+DCPS_A_PATH = "./Task1/input/data_cleaned_from_punctuations_and_stopwords/dcps_A.xlsx"
+DCPS_B_PATH = "./Task1/input/data_cleaned_from_punctuations_and_stopwords/dcps_B.xlsx"
+DCPS_C_PATH = "./Task1/input/data_cleaned_from_punctuations_and_stopwords/dcps_C.xlsx"
 
 # Data Cleaned From Punctuations and Stop-words Output
-OUTPUT_DCPS_A = "./output/w2v_on_dcps/dcps_A_vec.json"
-OUTPUT_DCPS_B = "./output/w2v_on_dcps/dcps_B_vec.json"
-OUTPUT_DCPS_C = "./output/w2v_on_dcps/dcps_C_vec.json"
-OUTPUT_DCPS_A_EXCEL = "./output/w2v_on_dcps/dcps_A_vec.xlsx"
-OUTPUT_DCPS_B_EXCEL = "./output/w2v_on_dcps/dcps_B_vec.xlsx"
-OUTPUT_DCPS_C_EXCEL = "./output/w2v_on_dcps/dcps_C_vec.xlsx"
+OUTPUT_DCPS_A = "./Task1/output/w2v_on_dcps/dcps_A_vec.json"
+OUTPUT_DCPS_B = "./Task1/output/w2v_on_dcps/dcps_B_vec.json"
+OUTPUT_DCPS_C = "./Task1/output/w2v_on_dcps/dcps_C_vec.json"
+OUTPUT_DCPS_A_EXCEL = "./Task1/output/w2v_on_dcps/dcps_A_vec.xlsx"
+OUTPUT_DCPS_B_EXCEL = "./Task1/output/w2v_on_dcps/dcps_B_vec.xlsx"
+OUTPUT_DCPS_C_EXCEL = "./Task1/output/w2v_on_dcps/dcps_C_vec.xlsx"
 
 # Data Cleaned From Punctuations Input
-DCP_A_PATH = "./input/data_cleaned_from_punctuations/dcp_A.xlsx"
-DCP_B_PATH = "./input/data_cleaned_from_punctuations/dcp_B.xlsx"
-DCP_C_PATH = "./input/data_cleaned_from_punctuations/dcp_C.xlsx"
+DCP_A_PATH = "./Task1/input/data_cleaned_from_punctuations/dcp_A.xlsx"
+DCP_B_PATH = "./Task1/input/data_cleaned_from_punctuations/dcp_B.xlsx"
+DCP_C_PATH = "./Task1/input/data_cleaned_from_punctuations/dcp_C.xlsx"
 
 # Data Cleaned From Punctuations Output
-OUTPUT_DCP_A = "./output/w2v_on_dcp/dcp_A_vec.json"
-OUTPUT_DCP_B = "./output/w2v_on_dcp/dcp_B_vec.json"
-OUTPUT_DCP_C = "./output/w2v_on_dcp/dcp_C_vec.json"
-OUTPUT_DCP_A_EXCEL = "./output/w2v_on_dcp/dcp_A_vec.xlsx"
-OUTPUT_DCP_B_EXCEL = "./output/w2v_on_dcp/dcp_B_vec.xlsx"
-OUTPUT_DCP_C_EXCEL = "./output/w2v_on_dcp/dcp_C_vec.xlsx"
+OUTPUT_DCP_A = "./Task1/output/w2v_on_dcp/dcp_A_vec.json"
+OUTPUT_DCP_B = "./Task1/output/w2v_on_dcp/dcp_B_vec.json"
+OUTPUT_DCP_C = "./Task1/output/w2v_on_dcp/dcp_C_vec.json"
+OUTPUT_DCP_A_EXCEL = "./Task1/output/w2v_on_dcp/dcp_A_vec.xlsx"
+OUTPUT_DCP_B_EXCEL = "./Task1/output/w2v_on_dcp/dcp_B_vec.xlsx"
+OUTPUT_DCP_C_EXCEL = "./Task1/output/w2v_on_dcp/dcp_C_vec.xlsx"
 
 # Data With Lemot Only Input
-DWLO_A_PATH = "./input/data_with_lemot_only/dwlo_A.xlsx"
-DWLO_B_PATH = "./input/data_with_lemot_only/dwlo_B.xlsx"
-DWLO_C_PATH = "./input/data_with_lemot_only/dwlo_C.xlsx"
+DWLO_A_PATH = "./Task1/input/data_with_lemot_only/dwlo_A.xlsx"
+DWLO_B_PATH = "./Task1/input/data_with_lemot_only/dwlo_B.xlsx"
+DWLO_C_PATH = "./Task1/input/data_with_lemot_only/dwlo_C.xlsx"
 
 # Data With Lemot Only Output
-OUTPUT_DWLO_A = "./output/w2v_on_dwlo/dwlo_A_vec.json"
-OUTPUT_DWLO_B = "./output/w2v_on_dwlo/dwlo_B_vec.json"
-OUTPUT_DWLO_C = "./output/w2v_on_dwlo/dwlo_C_vec.json"
-OUTPUT_DWLO_A_EXCEL = "./output/w2v_on_dwlo/dwlo_A_vec.xlsx"
-OUTPUT_DWLO_B_EXCEL = "./output/w2v_on_dwlo/dwlo_B_vec.xlsx"
-OUTPUT_DWLO_C_EXCEL = "./output/w2v_on_dwlo/dwlo_C_vec.xlsx"
+OUTPUT_DWLO_A = "./Task1/output/w2v_on_dwlo/dwlo_A_vec.json"
+OUTPUT_DWLO_B = "./Task1/output/w2v_on_dwlo/dwlo_B_vec.json"
+OUTPUT_DWLO_C = "./Task1/output/w2v_on_dwlo/dwlo_C_vec.json"
+OUTPUT_DWLO_A_EXCEL = "./Task1/output/w2v_on_dwlo/dwlo_A_vec.xlsx"
+OUTPUT_DWLO_B_EXCEL = "./Task1/output/w2v_on_dwlo/dwlo_B_vec.xlsx"
+OUTPUT_DWLO_C_EXCEL = "./Task1/output/w2v_on_dwlo/dwlo_C_vec.xlsx"
 
 # Word2Vec Model Path
-W2V_VECTORS = "./model/w2v/words_vectors.npy"
-W2V_VOCAB = "./model/w2v/words_list.txt"
+W2V_VECTORS = "./Task1/model/w2v/words_vectors.npy"
+W2V_VOCAB = "./Task1/model/w2v/words_list.txt"
 
 
 def generate_document_vector(text, vocab=W2V_VOCAB, stored_vectors=W2V_VECTORS):

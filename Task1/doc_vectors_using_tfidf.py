@@ -4,34 +4,34 @@ from collections import Counter
 import math
 
 # Data Cleaned From Punctuations and Stop-words Input
-DCPS_A_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_A.xlsx"
-DCPS_B_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_B.xlsx"
-DCPS_C_PATH = "./input/data_cleaned_from_punctuations_and_stopwords/dcps_C.xlsx"
+DCPS_A_PATH = "./Task1/input/data_cleaned_from_punctuations_and_stopwords/dcps_A.xlsx"
+DCPS_B_PATH = "./Task1/input/data_cleaned_from_punctuations_and_stopwords/dcps_B.xlsx"
+DCPS_C_PATH = "./Task1/input/data_cleaned_from_punctuations_and_stopwords/dcps_C.xlsx"
 
 # Output Destination Excels
-OUTPUT_A_EXCEL = "./output/tfidf_on_dcps/dcps_A_vec.xlsx"
-OUTPUT_B_EXCEL = "./output/tfidf_on_dcps/dcps_B_vec.xlsx"
-OUTPUT_C_EXCEL = "./output/tfidf_on_dcps/dcps_C_vec.xlsx"
+OUTPUT_A_EXCEL = "./Task1/output/tfidf_on_dcps/dcps_A_vec.xlsx"
+OUTPUT_B_EXCEL = "./Task1/output/tfidf_on_dcps/dcps_B_vec.xlsx"
+OUTPUT_C_EXCEL = "./Task1/output/tfidf_on_dcps/dcps_C_vec.xlsx"
 
 # Output Destination Excels
-OUTPUT_A_HDF5 = "./output/tfidf_on_dcps/dcps_A_vec.h5"
-OUTPUT_B_HDF5 = "./output/tfidf_on_dcps/dcps_B_vec.h5"
-OUTPUT_C_HDF5 = "./output/tfidf_on_dcps/dcps_C_vec.h5"
+OUTPUT_A_HDF5 = "./Task1/output/tfidf_on_dcps/dcps_A_vec.h5"
+OUTPUT_B_HDF5 = "./Task1/output/tfidf_on_dcps/dcps_B_vec.h5"
+OUTPUT_C_HDF5 = "./Task1/output/tfidf_on_dcps/dcps_C_vec.h5"
 
 # Temp files for vocabulary.
-A_CLEAN_VOCA = "./nehorai_temp_files/A_CLEAN_VOCA.xlsx"
-B_CLEAN_VOCA = "./nehorai_temp_files/B_CLEAN_VOCA.xlsx"
-C_CLEAN_VOCA = "./nehorai_temp_files/C_CLEAN_VOCA.xlsx"
+A_CLEAN_VOCA = "./Task1/nehorai_temp_files/A_CLEAN_VOCA.xlsx"
+B_CLEAN_VOCA = "./Task1/nehorai_temp_files/B_CLEAN_VOCA.xlsx"
+C_CLEAN_VOCA = "./Task1/nehorai_temp_files/C_CLEAN_VOCA.xlsx"
 
 # Temp files for documents length.
-A_CLEAN_LEN = "./nehorai_temp_files/A_CLEAN_LEN.xlsx"
-B_CLEAN_LEN = "./nehorai_temp_files/B_CLEAN_LEN.xlsx"
-C_CLEAN_LEN = "./nehorai_temp_files/C_CLEAN_LEN.xlsx"
+A_CLEAN_LEN = "./Task1/nehorai_temp_files/A_CLEAN_LEN.xlsx"
+B_CLEAN_LEN = "./Task1/nehorai_temp_files/B_CLEAN_LEN.xlsx"
+C_CLEAN_LEN = "./Task1/nehorai_temp_files/C_CLEAN_LEN.xlsx"
 
 # Temp files for appearances (in how many document the word appear at least one time).
-A_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\A_CLEAN_APPEARANCES.xlsx"
-B_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\B_CLEAN_APPEARANCES.xlsx"
-C_CLEAN_APPEARANCES = ".\\nehorai_temp_files\\C_CLEAN_APPEARANCES.xlsx"
+A_CLEAN_APPEARANCES = "./Task1/nehorai_temp_files/A_CLEAN_APPEARANCES.xlsx"
+B_CLEAN_APPEARANCES = "./Task1/nehorai_temp_files/B_CLEAN_APPEARANCES.xlsx"
+C_CLEAN_APPEARANCES = "./Task1/nehorai_temp_files/C_CLEAN_APPEARANCES.xlsx"
 
 
 def get_voca(dcps_x_path, x_clean_voca):
