@@ -6,6 +6,7 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import umap
 import json
 import os
 
@@ -164,6 +165,21 @@ def plot_TSNE_graph(vectors1, vectors2, labels1, labels2, label1_name, label2_na
     print(f"t-SNE plot saved in: {save_path}")
 
 
+def visualize_umap_with_dbscan_clusters(vectors, labels, title, save_path):
+    embedding = umap.UMAP(n_neighbors=5, min_dist=0.3, random_state=42).fit_transform(vectors)
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=labels, cmap='viridis', s=5)
+    plt.title(title)
+    plt.savefig(save_path)
+    print(f"UMAP plot saved in: {save_path}")
+
+
+def visualize_mog_clustering(vectors, labels, title, save_path):
+    plt.scatter(vectors[:, 0], vectors[:, 1], c=labels, cmap='viridis', s=5)
+    plt.title(title)
+    plt.savefig(save_path)
+    plt.show()
+
+
 def k_means_clustering(vectors1, vectors2):
     all_vectors = np.vstack((vectors1, vectors2))
     kmeans = KMeans(n_clusters=2, random_state=42).fit(all_vectors)
@@ -200,6 +216,9 @@ def dbscan_clustering(vectors1, vectors2, eps, min_samples):
     labels_all = dbscan.fit_predict(all_vectors)
     labels1 = labels_all[:len(vectors1)]
     labels2 = labels_all[len(vectors1):]
+    # Mark second group with 1 instead of -1, first group is 0. (like K-Means).
+    labels1 = [-1 * i for i in labels1]
+    labels2 = [-1 * i for i in labels2]
     return labels1, labels2
 
 
@@ -237,7 +256,6 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
         print(f"Working on pairs: {pair_describe} ...")
 
         # Create clusters
-        vectors1, vectors2 = np.array(vectors1), np.array(vectors2)  # Convert to numpy array
         if alg[0] == ALG["K-means"]:
             print("Clustering algorithm: K-means.")
             labels1, labels2 = k_means_clustering(vectors1, vectors2)
@@ -285,10 +303,17 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
             json.dump(result_2, json_file)
         print(f"Evaluate result saved in: {json_save_path}")
 
-        # Plot clusters using t-SNE
-        plot_TSNE_graph(vectors1, vectors2, labels1, labels2, pair_describe[0], pair_describe[2],
-                        f"t-SNE {pair_describe}",
-                        os.path.join(output_folder, f'tsne_{pair_describe}.png'))
+        # Plot clusters
+        if alg[0] == ALG["K-means"]:
+            plot_TSNE_graph(vectors1, vectors2, labels1, labels2, pair_describe[0], pair_describe[2],
+                            f"t-SNE {pair_describe}",
+                            os.path.join(output_folder, f'tsne_{pair_describe}.png'))
+        elif alg[0] == ALG["DBSCAN"]:
+            visualize_umap_with_dbscan_clusters(vectors1 + vectors2, labels1 + labels2, f"UMAP {pair_describe}",
+                                                os.path.join(output_folder, f'umap_{pair_describe}.png'))
+        elif alg[0] == ALG["Mixture of Gaussian"]:
+            visualize_mog_clustering(vectors1 + vectors2, labels1 + labels2, f"UMAP {pair_describe}",
+                                     os.path.join(output_folder, f'umap_{pair_describe}.png'))
 
         print("\n")
 
@@ -377,42 +402,42 @@ def dbscan_output():
     create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
                              group3_path=BERT_SOURCE_C_VECTORS,
                              output_folder=DBSCAN_BERT_SOURCE_OUTPUT_FOLDER,
-                             alg=[ALG["DBSCAN"], eps["Bert_eps"], 5000])
+                             alg=[ALG["DBSCAN"], eps["Bert_eps"], 2500])
 
     # DBSCAN for d2v_on_source vectors
     print("Create output for 'D2V_On_Source' doc vectors.")
     create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
                              group3_path=D2V_SOURCE_C_VECTORS,
                              output_folder=DBSCAN_D2V_SOURCE_OUTPUT_FOLDER,
-                             alg=[ALG["DBSCAN"], eps['D2V_eps'], 5000])
+                             alg=[ALG["DBSCAN"], eps['D2V_eps'], 1500])
 
     # DBSCAN for tfidf_on_lemots vectors
     print("Create output for 'TFIDF_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_LEMOTS_A_VECTORS, group2_path=TFIDF_LEMOTS_B_VECTORS,
                              group3_path=TFIDF_LEMOTS_C_VECTORS,
                              output_folder=DBSCAN_TFIDF_LEMOTS_OUTPUT_FOLDER,
-                             alg=[ALG["DBSCAN"], eps['TFIDF_eps'], 5000])
+                             alg=[ALG["DBSCAN"], eps['TFIDF_eps'], 2500])
 
     # DBSCAN for tfidf_on_words vectors
     print("Create output for 'TFIDF_On_Words' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
                              group3_path=TFIDF_WORDS_C_VECTORS,
                              output_folder=DBSCAN_TFIDF_WORDS_OUTPUT_FOLDER,
-                             alg=[ALG["DBSCAN"], eps['TFIDF_eps'], 5000])
+                             alg=[ALG["DBSCAN"], eps['TFIDF_eps'], 2500])
 
     # DBSCAN for w2v_on_lemots vectors
     print("Create output for 'W2V_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
                              group3_path=W2V_LEMOTS_C_VECTORS,
                              output_folder=DBSCAN_W2V_LEMOTS_OUTPUT_FOLDER,
-                             alg=[ALG["DBSCAN"], eps['W2V_eps'], 5000])
+                             alg=[ALG["DBSCAN"], eps['W2V_eps'], 2500])
 
     # DBSCAN for w2v_on_words vectors
     print("Create output for 'W2V_On_Words' doc vectors.")
     create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
                              group3_path=W2V_WORDS_C_VECTORS,
                              output_folder=DBSCAN_W2V_WORDS_OUTPUT_FOLDER,
-                             alg=[ALG["DBSCAN"], eps['W2V_eps'], 5000])
+                             alg=[ALG["DBSCAN"], eps['W2V_eps'], 2500])
 
 
 def mixture_of_gaussian_output():
@@ -465,6 +490,7 @@ def main():
 
     # Mixture of Gaussian Clustering
     mixture_of_gaussian_output()
+
 
 if __name__ == "__main__":
     main()
