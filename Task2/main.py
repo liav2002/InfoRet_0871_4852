@@ -319,7 +319,7 @@ def kmeans_output():
     print("Create output for 'TFIDF_On_Words' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
                              group3_path=TFIDF_WORDS_C_VECTORS,
-                             output_folder=KMEANS_TFIDF_WORDS_OUTPUT_FOLDER, alg=ALG[["K-means"]])
+                             output_folder=KMEANS_TFIDF_WORDS_OUTPUT_FOLDER, alg=[ALG["K-means"]])
 
     # K-means for w2v_on_lemots vectors
     print("Create output for 'W2V_On_Lemots' doc vectors.")
@@ -331,7 +331,7 @@ def kmeans_output():
     print("Create output for 'W2V_On_Words' doc vectors.")
     create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
                              group3_path=W2V_WORDS_C_VECTORS,
-                             output_folder=KMEANS_W2V_WORDS_OUTPUT_FOLDER, alg=ALG[["K-means"]])
+                             output_folder=KMEANS_W2V_WORDS_OUTPUT_FOLDER, alg=[ALG["K-means"]])
 
 
 def k_distance_graphs_output():
@@ -441,7 +441,7 @@ def mixture_of_gaussian_output():
     print("Create output for 'TFIDF_On_Words' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
                              group3_path=TFIDF_WORDS_C_VECTORS,
-                             output_folder=MixOG_TFIDF_WORDS_OUTPUT_FOLDER, alg=ALG[["Mixture of Gaussian"]])
+                             output_folder=MixOG_TFIDF_WORDS_OUTPUT_FOLDER, alg=[ALG["Mixture of Gaussian"]])
 
     # Mixture of Gaussian for w2v_on_lemots vectors
     print("Create output for 'W2V_On_Lemots' doc vectors.")
@@ -453,7 +453,7 @@ def mixture_of_gaussian_output():
     print("Create output for 'W2V_On_Words' doc vectors.")
     create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
                              group3_path=W2V_WORDS_C_VECTORS,
-                             output_folder=MixOG_W2V_WORDS_OUTPUT_FOLDER, alg=ALG[["Mixture of Gaussian"]])
+                             output_folder=MixOG_W2V_WORDS_OUTPUT_FOLDER, alg=[ALG["Mixture of Gaussian"]])
 
 
 def main():
