@@ -1,0 +1,6 @@
+{
+	"Bert_eps": 8,
+	"D2V_eps": 5,
+	"TFIDF_eps": 30,
+	"W2V_eps": 450
+}
