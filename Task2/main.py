@@ -42,6 +42,9 @@ W2V_WORDS_A_VECTORS = "./data/w2v_on_words/w2v_words_A_docvec.xlsx"
 W2V_WORDS_B_VECTORS = "./data/w2v_on_words/w2v_words_B_docvec.xlsx"
 W2V_WORDS_C_VECTORS = "./data/w2v_on_words/w2v_words_C_docvec.xlsx"
 
+# DBSCAN Parameters for eps.
+DBSCAN_EPS = "./input/dbscan-eps.json"
+
 # Output Folders
 
 # K-means output
@@ -59,6 +62,12 @@ DBSCAN_TFIDF_LEMOTS_OUTPUT_FOLDER = "./output/DBSCAN/TFIDF_On_Lemots_Groups/"
 DBSCAN_TFIDF_WORDS_OUTPUT_FOLDER = "./output/DBSCAN/TFIDF_On_Words_Groups/"
 DBSCAN_W2V_LEMOTS_OUTPUT_FOLDER = "./output/DBSCAN/W2V_On_Lemots_Groups/"
 DBSCAN_W2V_WORDS_OUTPUT_FOLDER = "./output/DBSCAN/W2V_On_Words_Groups/"
+
+
+def read_json_file(file_path):
+    with open(file_path, 'r') as json_file:
+        data = json.load(json_file)
+    return data
 
 
 def get_vectors_from(file_path):
@@ -176,7 +185,7 @@ def plot_k_distance_graph(vectors_path_group1, vectors_path_group2, save_folder,
     plt.savefig(f"{save_folder}/k_distance_graph_{groups_name}")
 
 
-def dbscan_clustering(vectors1, vectors2):
+def dbscan_clustering(vectors1, vectors2, eps, min_samples):
     # TODO: Implement this function.
     # all_vectors = np.vstack((vectors1, vectors2))
     # dbscan = create clustering unsupervised from all vectors to 2 clusters using dbscan.
@@ -212,37 +221,53 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
 
         # Create clusters using K-Means
         vectors1, vectors2 = np.array(vectors1), np.array(vectors2)  # Convert to numpy array
-        if alg == ALG["K-means"]:
+        if alg[0] == ALG["K-means"]:
             print("Clustering algorithm: K-means.")
             labels1, labels2 = k_means_clustering(vectors1, vectors2)
-        else:
+        elif alg[0] == ALG["DBSCAN"]:
             print("Clustering algorithm: DBSCAN.")
-            labels1, labels2 = dbscan_clustering(vectors1, vectors2)
+            labels1, labels2 = dbscan_clustering(vectors1, vectors2, alg[1], alg[2])
+        else:
+            raise Exception("Unknown clustering algorithm.")
         print("clustering finish.")
 
         # Evaluate clusters
         print("Evaluate results:")
-        precision, recall, f1, accuracy = evaluate_clustering(np.zeros(len(vectors1)), np.ones(len(vectors2)), labels1,
-                                                              labels2)
+        precision_1, recall_1, f1_1, accuracy_1 = evaluate_clustering(np.zeros(len(vectors1)), np.ones(len(vectors2)),
+                                                                      labels1,
+                                                                      labels2)
+        precision_2, recall_2, f1_2, accuracy_2 = evaluate_clustering(np.ones(len(vectors2)), np.zeros(len(vectors1)),
+                                                                      labels1,
+                                                                      labels2)
 
         # Create output for JSON
-        result = {
-            'precision': precision,
-            'recall': recall,
-            'f1': f1,
-            'accuracy': accuracy
+        result_1 = {
+            'precision': precision_1,
+            'recall': recall_1,
+            'f1': f1_1,
+            'accuracy': accuracy_1
+        }
+        result_2 = {
+            'precision': precision_2,
+            'recall': recall_2,
+            'f1': f1_2,
+            'accuracy': accuracy_2
         }
 
         # Save the result into json file.
-        json_save_path = os.path.join(output_folder, f'{pair_describe}.json')
+        json_save_path = os.path.join(output_folder, f'{pair_describe}_1.json')
         with open(json_save_path, 'w') as json_file:
-            json.dump(result, json_file)
+            json.dump(result_1, json_file)
+        print(f"Evaluate result saved in: {json_save_path}")
+        json_save_path = os.path.join(output_folder, f'{pair_describe}_2.json')
+        with open(json_save_path, 'w') as json_file:
+            json.dump(result_2, json_file)
         print(f"Evaluate result saved in: {json_save_path}")
 
         # Plot clusters using t-SNE
-        plot_TSNE_graph(vectors1, vectors2, labels1, labels2, pair_describe[0], pair_describe[2],
-                        f"t-SNE {pair_describe}",
-                        os.path.join(output_folder, f'tsne_{pair_describe}.png'))
+        # plot_TSNE_graph(vectors1, vectors2, labels1, labels2, pair_describe[0], pair_describe[2],
+        #                 f"t-SNE {pair_describe}",
+        #                 os.path.join(output_folder, f'tsne_{pair_describe}.png'))
 
         print("\n")
 
@@ -255,37 +280,37 @@ def kmeans_output():
     print("Create output for 'Bert_On_Source' doc vectors.")
     create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
                              group3_path=BERT_SOURCE_C_VECTORS,
-                             output_folder=KMEANS_BERT_SOURCE_OUTPUT_FOLDER, alg=ALG["K-means"])
+                             output_folder=KMEANS_BERT_SOURCE_OUTPUT_FOLDER, alg=[ALG["K-means"]])
 
     # K-means for d2v_on_source vectors
     print("Create output for 'D2V_On_Source' doc vectors.")
     create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
                              group3_path=D2V_SOURCE_C_VECTORS,
-                             output_folder=KMEANS_D2V_SOURCE_OUTPUT_FOLDER, alg=ALG["K-means"])
+                             output_folder=KMEANS_D2V_SOURCE_OUTPUT_FOLDER, alg=[ALG["K-means"]])
 
     # K-means for tfidf_on_lemots vectors
     print("Create output for 'TFIDF_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_LEMOTS_A_VECTORS, group2_path=TFIDF_LEMOTS_B_VECTORS,
                              group3_path=TFIDF_LEMOTS_C_VECTORS,
-                             output_folder=KMEANS_TFIDF_LEMOTS_OUTPUT_FOLDER, alg=ALG["K-means"])
+                             output_folder=KMEANS_TFIDF_LEMOTS_OUTPUT_FOLDER, alg=[ALG["K-means"]])
 
     # K-means for tfidf_on_words vectors
     print("Create output for 'TFIDF_On_Words' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
                              group3_path=TFIDF_WORDS_C_VECTORS,
-                             output_folder=KMEANS_TFIDF_WORDS_OUTPUT_FOLDER, alg=ALG["K-means"])
+                             output_folder=KMEANS_TFIDF_WORDS_OUTPUT_FOLDER, alg=ALG[["K-means"]])
 
     # K-means for w2v_on_lemots vectors
     print("Create output for 'W2V_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
                              group3_path=W2V_LEMOTS_C_VECTORS,
-                             output_folder=KMEANS_W2V_LEMOTS_OUTPUT_FOLDER, alg=ALG["K-means"])
+                             output_folder=KMEANS_W2V_LEMOTS_OUTPUT_FOLDER, alg=[ALG["K-means"]])
 
     # K-means for w2v_on_words vectors
     print("Create output for 'W2V_On_Words' doc vectors.")
     create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
                              group3_path=W2V_WORDS_C_VECTORS,
-                             output_folder=KMEANS_W2V_WORDS_OUTPUT_FOLDER, alg=ALG["K-means"])
+                             output_folder=KMEANS_W2V_WORDS_OUTPUT_FOLDER, alg=ALG[["K-means"]])
 
 
 def k_distance_graphs_output():
@@ -324,48 +349,62 @@ def dbscan_output():
     # DBSCAN
     print("Clustering Matrices using DBSCAN...\n")
 
+    eps = read_json_file(DBSCAN_EPS)
+
     # K-means for bert_on_source vectors
     print("Create output for 'Bert_On_Source' doc vectors.")
     create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
                              group3_path=BERT_SOURCE_C_VECTORS,
-                             output_folder=DBSCAN_BERT_SOURCE_OUTPUT_FOLDER, alg=ALG["DBSCAN"])
+                             output_folder=DBSCAN_BERT_SOURCE_OUTPUT_FOLDER,
+                             alg=[ALG["DBSCAN"], eps["Bert_eps"], 5000])
 
     # K-means for d2v_on_source vectors
     print("Create output for 'D2V_On_Source' doc vectors.")
     create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
                              group3_path=D2V_SOURCE_C_VECTORS,
-                             output_folder=DBSCAN_D2V_SOURCE_OUTPUT_FOLDER, alg=ALG["DBSCAN"])
+                             output_folder=DBSCAN_D2V_SOURCE_OUTPUT_FOLDER,
+                             alg=[ALG["DBSCAN"], eps['D2V_eps'], 5000])
 
     # K-means for tfidf_on_lemots vectors
     print("Create output for 'TFIDF_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_LEMOTS_A_VECTORS, group2_path=TFIDF_LEMOTS_B_VECTORS,
                              group3_path=TFIDF_LEMOTS_C_VECTORS,
-                             output_folder=DBSCAN_TFIDF_LEMOTS_OUTPUT_FOLDER, alg=ALG["DBSCAN"])
+                             output_folder=DBSCAN_TFIDF_LEMOTS_OUTPUT_FOLDER,
+                             alg=[ALG["DBSCAN"], eps['TFIDF_eps'], 5000])
 
     # K-means for tfidf_on_words vectors
     print("Create output for 'TFIDF_On_Words' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
                              group3_path=TFIDF_WORDS_C_VECTORS,
-                             output_folder=DBSCAN_TFIDF_WORDS_OUTPUT_FOLDER, alg=ALG["DBSCAN"])
+                             output_folder=DBSCAN_TFIDF_WORDS_OUTPUT_FOLDER,
+                             alg=[ALG["DBSCAN"], eps['TFIDF_eps'], 5000])
 
     # K-means for w2v_on_lemots vectors
     print("Create output for 'W2V_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
                              group3_path=W2V_LEMOTS_C_VECTORS,
-                             output_folder=DBSCAN_W2V_LEMOTS_OUTPUT_FOLDER, alg=ALG["DBSCAN"])
+                             output_folder=DBSCAN_W2V_LEMOTS_OUTPUT_FOLDER,
+                             alg=[ALG["DBSCAN"], eps['W2V_eps'], 5000])
 
     # K-means for w2v_on_words vectors
     print("Create output for 'W2V_On_Words' doc vectors.")
     create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
                              group3_path=W2V_WORDS_C_VECTORS,
-                             output_folder=DBSCAN_W2V_WORDS_OUTPUT_FOLDER, alg=ALG["DBSCAN"])
+                             output_folder=DBSCAN_W2V_WORDS_OUTPUT_FOLDER,
+                             alg=[ALG["DBSCAN"], eps['W2V_eps'], 5000])
 
 
 def main():
-    # kmeans_output()
-    # dbscan_output()
-    k_distance_graphs_output()
+    # K-means Clustering
+    kmeans_output()
 
+    # # DBSCAN Clustering
+    #
+    # # Get graphs for choosing eps.
+    # k_distance_graphs_output()
+
+    # start dbscan
+    dbscan_output()
 
 
 if __name__ == "__main__":
