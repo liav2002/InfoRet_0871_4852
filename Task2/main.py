@@ -1,6 +1,7 @@
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from sklearn.neighbors import NearestNeighbors
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, DBSCAN
+from sklearn.mixture import GaussianMixture
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -8,7 +9,7 @@ import numpy as np
 import json
 import os
 
-ALG = {"K-means": 1, "DBSCAN": 2}
+ALG = {"K-means": 1, "DBSCAN": 2, "Mixture of Gaussian": 3}
 
 # Data Files
 
@@ -62,6 +63,14 @@ DBSCAN_TFIDF_LEMOTS_OUTPUT_FOLDER = "./output/DBSCAN/TFIDF_On_Lemots_Groups/"
 DBSCAN_TFIDF_WORDS_OUTPUT_FOLDER = "./output/DBSCAN/TFIDF_On_Words_Groups/"
 DBSCAN_W2V_LEMOTS_OUTPUT_FOLDER = "./output/DBSCAN/W2V_On_Lemots_Groups/"
 DBSCAN_W2V_WORDS_OUTPUT_FOLDER = "./output/DBSCAN/W2V_On_Words_Groups/"
+
+# Mixture of Gaussian output
+MixOG_BERT_SOURCE_OUTPUT_FOLDER = "./output/MixOG/Bert_On_Source_Groups/"
+MixOG_D2V_SOURCE_OUTPUT_FOLDER = "./output/MixOG/D2V_On_Source_Groups/"
+MixOG_TFIDF_LEMOTS_OUTPUT_FOLDER = "./output/MixOG/TFIDF_On_Lemots_Groups/"
+MixOG_TFIDF_WORDS_OUTPUT_FOLDER = "./output/MixOG/TFIDF_On_Words_Groups/"
+MixOG_W2V_LEMOTS_OUTPUT_FOLDER = "./output/MixOG/W2V_On_Lemots_Groups/"
+MixOG_W2V_WORDS_OUTPUT_FOLDER = "./output/MixOG/W2V_On_Words_Groups/"
 
 
 def read_json_file(file_path):
@@ -186,13 +195,21 @@ def plot_k_distance_graph(vectors_path_group1, vectors_path_group2, save_folder,
 
 
 def dbscan_clustering(vectors1, vectors2, eps, min_samples):
-    # TODO: Implement this function.
-    # all_vectors = np.vstack((vectors1, vectors2))
-    # dbscan = create clustering unsupervised from all vectors to 2 clusters using dbscan.
-    # labels1 = dbscan.predict(vectors1)
-    # labels2 = dbscan.predict(vectors2)
-    # return labels1, labels2
-    return None, None
+    all_vectors = np.vstack((vectors1, vectors2))
+    dbscan = DBSCAN(eps=eps, min_samples=min_samples)  # Adjust parameters as needed
+    labels_all = dbscan.fit_predict(all_vectors)
+    labels1 = labels_all[:len(vectors1)]
+    labels2 = labels_all[len(vectors1):]
+    return labels1, labels2
+
+
+def mixture_of_gaussian_clustering(vectors1, vectors2):
+    all_vectors = np.vstack((vectors1, vectors2))
+    gmm = GaussianMixture(n_components=2, random_state=42)
+    gmm.fit(all_vectors)
+    labels1 = gmm.predict(vectors1)
+    labels2 = gmm.predict(vectors2)
+    return labels1, labels2
 
 
 def create_output_for_groups(group1_path, group2_path, group3_path, output_folder, alg):
@@ -219,7 +236,7 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
 
         print(f"Working on pairs: {pair_describe} ...")
 
-        # Create clusters using K-Means
+        # Create clusters
         vectors1, vectors2 = np.array(vectors1), np.array(vectors2)  # Convert to numpy array
         if alg[0] == ALG["K-means"]:
             print("Clustering algorithm: K-means.")
@@ -227,6 +244,10 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
         elif alg[0] == ALG["DBSCAN"]:
             print("Clustering algorithm: DBSCAN.")
             labels1, labels2 = dbscan_clustering(vectors1, vectors2, alg[1], alg[2])
+        elif alg[0] == ALG["Mixture of Gaussian"]:
+            print("Clustering algorithm: Mixture of Gaussian.")
+            labels1, labels2 = mixture_of_gaussian_clustering(vectors1, vectors2)
+
         else:
             raise Exception("Unknown clustering algorithm.")
         print("clustering finish.")
@@ -265,9 +286,9 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
         print(f"Evaluate result saved in: {json_save_path}")
 
         # Plot clusters using t-SNE
-        # plot_TSNE_graph(vectors1, vectors2, labels1, labels2, pair_describe[0], pair_describe[2],
-        #                 f"t-SNE {pair_describe}",
-        #                 os.path.join(output_folder, f'tsne_{pair_describe}.png'))
+        plot_TSNE_graph(vectors1, vectors2, labels1, labels2, pair_describe[0], pair_describe[2],
+                        f"t-SNE {pair_describe}",
+                        os.path.join(output_folder, f'tsne_{pair_describe}.png'))
 
         print("\n")
 
@@ -351,42 +372,42 @@ def dbscan_output():
 
     eps = read_json_file(DBSCAN_EPS)
 
-    # K-means for bert_on_source vectors
+    # DBSCAN for bert_on_source vectors
     print("Create output for 'Bert_On_Source' doc vectors.")
     create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
                              group3_path=BERT_SOURCE_C_VECTORS,
                              output_folder=DBSCAN_BERT_SOURCE_OUTPUT_FOLDER,
                              alg=[ALG["DBSCAN"], eps["Bert_eps"], 5000])
 
-    # K-means for d2v_on_source vectors
+    # DBSCAN for d2v_on_source vectors
     print("Create output for 'D2V_On_Source' doc vectors.")
     create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
                              group3_path=D2V_SOURCE_C_VECTORS,
                              output_folder=DBSCAN_D2V_SOURCE_OUTPUT_FOLDER,
                              alg=[ALG["DBSCAN"], eps['D2V_eps'], 5000])
 
-    # K-means for tfidf_on_lemots vectors
+    # DBSCAN for tfidf_on_lemots vectors
     print("Create output for 'TFIDF_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_LEMOTS_A_VECTORS, group2_path=TFIDF_LEMOTS_B_VECTORS,
                              group3_path=TFIDF_LEMOTS_C_VECTORS,
                              output_folder=DBSCAN_TFIDF_LEMOTS_OUTPUT_FOLDER,
                              alg=[ALG["DBSCAN"], eps['TFIDF_eps'], 5000])
 
-    # K-means for tfidf_on_words vectors
+    # DBSCAN for tfidf_on_words vectors
     print("Create output for 'TFIDF_On_Words' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
                              group3_path=TFIDF_WORDS_C_VECTORS,
                              output_folder=DBSCAN_TFIDF_WORDS_OUTPUT_FOLDER,
                              alg=[ALG["DBSCAN"], eps['TFIDF_eps'], 5000])
 
-    # K-means for w2v_on_lemots vectors
+    # DBSCAN for w2v_on_lemots vectors
     print("Create output for 'W2V_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
                              group3_path=W2V_LEMOTS_C_VECTORS,
                              output_folder=DBSCAN_W2V_LEMOTS_OUTPUT_FOLDER,
                              alg=[ALG["DBSCAN"], eps['W2V_eps'], 5000])
 
-    # K-means for w2v_on_words vectors
+    # DBSCAN for w2v_on_words vectors
     print("Create output for 'W2V_On_Words' doc vectors.")
     create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
                              group3_path=W2V_WORDS_C_VECTORS,
@@ -394,18 +415,56 @@ def dbscan_output():
                              alg=[ALG["DBSCAN"], eps['W2V_eps'], 5000])
 
 
+def mixture_of_gaussian_output():
+    # Mixture of Gaussian
+    print("Clustering Matrices using Mixture of Gaussian...\n")
+
+    # Mixture of Gaussian for bert_on_source vectors
+    print("Create output for 'Bert_On_Source' doc vectors.")
+    create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
+                             group3_path=BERT_SOURCE_C_VECTORS,
+                             output_folder=MixOG_BERT_SOURCE_OUTPUT_FOLDER, alg=[ALG["Mixture of Gaussian"]])
+
+    # Mixture of Gaussian for d2v_on_source vectors
+    print("Create output for 'D2V_On_Source' doc vectors.")
+    create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
+                             group3_path=D2V_SOURCE_C_VECTORS,
+                             output_folder=MixOG_D2V_SOURCE_OUTPUT_FOLDER, alg=[ALG["Mixture of Gaussian"]])
+
+    # Mixture of Gaussian for tfidf_on_lemots vectors
+    print("Create output for 'TFIDF_On_Lemots' doc vectors.")
+    create_output_for_groups(group1_path=TFIDF_LEMOTS_A_VECTORS, group2_path=TFIDF_LEMOTS_B_VECTORS,
+                             group3_path=TFIDF_LEMOTS_C_VECTORS,
+                             output_folder=MixOG_TFIDF_LEMOTS_OUTPUT_FOLDER, alg=[ALG["Mixture of Gaussian"]])
+
+    # Mixture of Gaussian for tfidf_on_words vectors
+    print("Create output for 'TFIDF_On_Words' doc vectors.")
+    create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
+                             group3_path=TFIDF_WORDS_C_VECTORS,
+                             output_folder=MixOG_TFIDF_WORDS_OUTPUT_FOLDER, alg=ALG[["Mixture of Gaussian"]])
+
+    # Mixture of Gaussian for w2v_on_lemots vectors
+    print("Create output for 'W2V_On_Lemots' doc vectors.")
+    create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
+                             group3_path=W2V_LEMOTS_C_VECTORS,
+                             output_folder=MixOG_W2V_LEMOTS_OUTPUT_FOLDER, alg=[ALG["Mixture of Gaussian"]])
+
+    # Mixture of Gaussian for w2v_on_words vectors
+    print("Create output for 'W2V_On_Words' doc vectors.")
+    create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
+                             group3_path=W2V_WORDS_C_VECTORS,
+                             output_folder=MixOG_W2V_WORDS_OUTPUT_FOLDER, alg=ALG[["Mixture of Gaussian"]])
+
+
 def main():
     # K-means Clustering
     kmeans_output()
 
-    # # DBSCAN Clustering
-    #
-    # # Get graphs for choosing eps.
-    # k_distance_graphs_output()
-
-    # start dbscan
+    # DBSCAN Clustering
     dbscan_output()
 
+    # Mixture of Gaussian Clustering
+    mixture_of_gaussian_output()
 
 if __name__ == "__main__":
     main()
