@@ -10,7 +10,7 @@ import umap
 import json
 import os
 
-ALG = {"K-means": 1, "DBSCAN": 2, "Mixture of Gaussian": 3}
+ALG = {"K-means": 1, "DBSCAN": 2, "Mixture of Gaussian": 3, "ANN": 4}
 
 # Data Files
 
@@ -117,7 +117,7 @@ def evaluate_clustering(label1_true, label2_true, labels_pred_cluster1, labels_p
     return total_precision, total_recall, total_f1, total_accuracy
 
 
-def plot_TSNE_graph(vectors1, vectors2, labels1, labels2, label1_name, label2_name, title, save_path):
+def visualize_with_tsne(vectors1, vectors2, labels1, labels2, label1_name, label2_name, title, save_path):
     """
     Visualize clusters using SNE-T.
 
@@ -165,7 +165,7 @@ def plot_TSNE_graph(vectors1, vectors2, labels1, labels2, label1_name, label2_na
     print(f"t-SNE plot saved in: {save_path}")
 
 
-def visualize_umap_with_dbscan_clusters(vectors, labels, title, save_path):
+def visualize_with_umap(vectors, labels, title, save_path):
     embedding = umap.UMAP(n_neighbors=5, min_dist=0.3, random_state=42).fit_transform(vectors)
     plt.scatter(embedding[:, 0], embedding[:, 1], c=labels, cmap='viridis', s=5)
     plt.title(title)
@@ -298,12 +298,12 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
 
         # Plot clusters
         if alg[0] == ALG["K-means"] or alg[0] == ALG["Mixture of Gaussian"]:
-            plot_TSNE_graph(vectors1, vectors2, labels1, labels2, pair_describe[0], pair_describe[2],
+            visualize_with_tsne(vectors1, vectors2, labels1, labels2, pair_describe[0], pair_describe[2],
                             f"t-SNE {pair_describe}",
-                            os.path.join(output_folder, f'tsne_{pair_describe}.png'))
+                                os.path.join(output_folder, f'tsne_{pair_describe}.png'))
         elif alg[0] == ALG["DBSCAN"]:
-            visualize_umap_with_dbscan_clusters(vectors1 + vectors2, labels1 + labels2, f"UMAP {pair_describe}",
-                                                os.path.join(output_folder, f'umap_{pair_describe}.png'))
+            visualize_with_umap(vectors1 + vectors2, labels1 + labels2, f"UMAP {pair_describe}",
+                                os.path.join(output_folder, f'umap_{pair_describe}.png'))
 
         print("\n")
 
