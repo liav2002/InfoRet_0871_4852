@@ -173,21 +173,6 @@ def visualize_umap_with_dbscan_clusters(vectors, labels, title, save_path):
     print(f"UMAP plot saved in: {save_path}")
 
 
-def visualize_mog_clustering(vectors, labels, title, save_path):
-    plt.scatter(vectors[:, 0], vectors[:, 1], c=labels, cmap='viridis', s=5)
-    plt.title(title)
-    plt.savefig(save_path)
-    plt.show()
-
-
-def k_means_clustering(vectors1, vectors2):
-    all_vectors = np.vstack((vectors1, vectors2))
-    kmeans = KMeans(n_clusters=2, random_state=42).fit(all_vectors)
-    labels1 = kmeans.predict(vectors1)
-    labels2 = kmeans.predict(vectors2)
-    return labels1, labels2
-
-
 def plot_k_distance_graph(vectors_path_group1, vectors_path_group2, save_folder, groups_name):
     # Load vectors
     vectors_group1 = get_vectors_from(vectors_path_group1)
@@ -208,6 +193,14 @@ def plot_k_distance_graph(vectors_path_group1, vectors_path_group2, save_folder,
     plt.xlabel('Number of Points')
     plt.ylabel('k-Distance')
     plt.savefig(f"{save_folder}/k_distance_graph_{groups_name}")
+
+
+def k_means_clustering(vectors1, vectors2):
+    all_vectors = np.vstack((vectors1, vectors2))
+    kmeans = KMeans(n_clusters=2, random_state=42).fit(all_vectors)
+    labels1 = kmeans.predict(vectors1)
+    labels2 = kmeans.predict(vectors2)
+    return labels1, labels2
 
 
 def dbscan_clustering(vectors1, vectors2, eps, min_samples):
@@ -304,16 +297,13 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
         print(f"Evaluate result saved in: {json_save_path}")
 
         # Plot clusters
-        if alg[0] == ALG["K-means"]:
+        if alg[0] == ALG["K-means"] or alg[0] == ALG["Mixture of Gaussian"]:
             plot_TSNE_graph(vectors1, vectors2, labels1, labels2, pair_describe[0], pair_describe[2],
                             f"t-SNE {pair_describe}",
                             os.path.join(output_folder, f'tsne_{pair_describe}.png'))
         elif alg[0] == ALG["DBSCAN"]:
             visualize_umap_with_dbscan_clusters(vectors1 + vectors2, labels1 + labels2, f"UMAP {pair_describe}",
                                                 os.path.join(output_folder, f'umap_{pair_describe}.png'))
-        elif alg[0] == ALG["Mixture of Gaussian"]:
-            visualize_mog_clustering(vectors1 + vectors2, labels1 + labels2, f"UMAP {pair_describe}",
-                                     os.path.join(output_folder, f'umap_{pair_describe}.png'))
 
         print("\n")
 
