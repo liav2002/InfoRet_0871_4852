@@ -10,7 +10,7 @@ import umap
 import json
 import os
 
-ALG = {"K-means": 1, "DBSCAN": 2, "Mixture of Gaussian": 3, "ANN": 4}
+ALG = {"K-means": 1, "DBSCAN": 2, "Mixture of Gaussian": 3}
 
 # Data Files
 
