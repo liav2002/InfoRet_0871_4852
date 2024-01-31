@@ -2,18 +2,18 @@ import os
 import json
 import numpy as np
 from Utills import *
+from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.utils import shuffle
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 from keras.models import Sequential
-from keras.layers import Embedding, Dense, Flatten
+from keras.layers import Dense, Flatten
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.activations import relu, sigmoid
-from keras.optimizers import Adam
 
-ALG = {"ANN": 1}
+ALG = {"ANN": 1, "NB": 2}
 
 # Data Files
 
@@ -56,6 +56,14 @@ ANN_TFIDF_LEMOTS_OUTPUT_FOLDER = "./output/ANN/TFIDF_On_Lemots_Groups/"
 ANN_TFIDF_WORDS_OUTPUT_FOLDER = "./output/ANN/TFIDF_On_Words_Groups/"
 ANN_W2V_LEMOTS_OUTPUT_FOLDER = "./output/ANN/W2V_On_Lemots_Groups/"
 ANN_W2V_WORDS_OUTPUT_FOLDER = "./output/ANN/W2V_On_Words_Groups/"
+
+# NB output
+NB_BERT_SOURCE_OUTPUT_FOLDER = "./output/NB/Bert_On_Source_Groups/"
+NB_D2V_SOURCE_OUTPUT_FOLDER = "./output/NB/D2V_On_Source_Groups/"
+NB_TFIDF_LEMOTS_OUTPUT_FOLDER = "./output/NB/TFIDF_On_Lemots_Groups/"
+NB_TFIDF_WORDS_OUTPUT_FOLDER = "./output/NB/TFIDF_On_Words_Groups/"
+NB_W2V_LEMOTS_OUTPUT_FOLDER = "./output/NB/W2V_On_Lemots_Groups/"
+NB_W2V_WORDS_OUTPUT_FOLDER = "./output/NB/W2V_On_Words_Groups/"
 
 
 class ANN_C:
@@ -162,6 +170,65 @@ class ANN_C:
         self.evaluate_and_save_results(model, test_vectors, test_labels, pair_name)
 
 
+class NB_C:
+    def __init__(self, output_folder):
+        self.output_folder = output_folder
+
+    def evaluate_and_save_results(self, model, test_data, test_labels, pair_name):
+        print("Evaluate results:")
+        predictions = model.predict(test_data)
+
+        accuracy = accuracy_score(test_labels, predictions)
+        precision = precision_score(test_labels, predictions)
+        recall = recall_score(test_labels, predictions)
+        f1 = f1_score(test_labels, predictions)
+
+        # Save results to a JSON file
+        result = {
+            'accuracy': accuracy,
+            'precision': precision,
+            'recall': recall,
+            'f1': f1
+        }
+        result_path = os.path.join(self.output_folder, f'result_{pair_name}.json')
+        with open(result_path, 'w') as json_file:
+            json.dump(result, json_file)
+        print(f"Evaluate result saved in: {result_path}")
+
+        # Visualize in UMAP
+        umap = TSNE(n_components=2, random_state=42)
+        umap_vectors = umap.fit_transform(test_data)
+
+        plt.scatter(umap_vectors[:, 0], umap_vectors[:, 1], c=test_labels, cmap='viridis', s=5)
+        plt.title(f'UMAP Visualization for {pair_name} Pair')
+        save_path = os.path.join(self.output_folder, f'umap_{pair_name}.png')
+        plt.savefig(save_path)
+        print(f"UMAP plot saved in: {save_path}\n\n")
+
+    def run_experiment(self, vectors1, vectors2, pair_name):
+        print(f"Working on pair: {pair_name} ...")
+
+        # Combine vectors and create labels
+        all_vectors = np.vstack((vectors1, vectors2))
+        all_labels = np.hstack((np.zeros(len(vectors1)), np.ones(len(vectors2))))
+
+        # Shuffle and split data
+        all_vectors, all_labels = shuffle(all_vectors, all_labels, random_state=42)
+        train_vectors, test_vectors, train_labels, test_labels = train_test_split(all_vectors, all_labels,
+                                                                                  test_size=0.2, random_state=42)
+        train_vectors, val_vectors, train_labels, val_labels = train_test_split(train_vectors, train_labels,
+                                                                                test_size=0.1, random_state=42)
+
+        # Create and fit the Naive Bayes model
+        print("Training model...")
+        model = GaussianNB()
+        model.fit(train_vectors, train_labels)
+        print("Model training finished.")
+
+        # Evaluate and save results
+        self.evaluate_and_save_results(model, test_vectors, test_labels, pair_name)
+
+
 def create_output_for_groups(group1_path, group2_path, group3_path, output_folder, alg):
     # Get vectors from data
     print("Retrieving vectors from data...")
@@ -185,53 +252,107 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
             pair_describe = "B&C"
 
         if alg[0] == ALG["ANN"]:
-            ann = ANN_C(output_folder=output_folder, topology=[(10, relu), (10, relu), (7, relu)])
+            ann = ANN_C(output_folder=output_folder, topology=alg[1])
             ann.run_experiment(vectors1, vectors2, pair_describe)
+        elif alg[0] == ALG["NB"]:
+            nb = NB_C(output_folder=output_folder)
+            nb.run_experiment(vectors1, vectors2, pair_describe)
 
 
 def ann_output():
     # ANN
     print("Clustering Matrices using ANN...\n")
 
-    # K-means for bert_on_source vectors
+    # ANN for bert_on_source vectors
     print("Create output for 'Bert_On_Source' doc vectors.")
     create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
                              group3_path=BERT_SOURCE_C_VECTORS,
-                             output_folder=ANN_BERT_SOURCE_OUTPUT_FOLDER, alg=[ALG["ANN"]])
+                             output_folder=ANN_BERT_SOURCE_OUTPUT_FOLDER,
+                             alg=[ALG["ANN"], [(10, relu), (10, relu), (7, relu)]])
 
     # ANN for d2v_on_source vectors
     print("Create output for 'D2V_On_Source' doc vectors.")
     create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
                              group3_path=D2V_SOURCE_C_VECTORS,
-                             output_folder=ANN_D2V_SOURCE_OUTPUT_FOLDER, alg=[ALG["ANN"]])
+                             output_folder=ANN_D2V_SOURCE_OUTPUT_FOLDER,
+                             alg=[ALG["ANN"], [(10, relu), (10, relu), (7, relu)]])
 
     # ANN for tfidf_on_lemots vectors
     print("Create output for 'TFIDF_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_LEMOTS_A_VECTORS, group2_path=TFIDF_LEMOTS_B_VECTORS,
                              group3_path=TFIDF_LEMOTS_C_VECTORS,
-                             output_folder=ANN_TFIDF_LEMOTS_OUTPUT_FOLDER, alg=[ALG["ANN"]])
+                             output_folder=ANN_TFIDF_LEMOTS_OUTPUT_FOLDER,
+                             alg=[ALG["ANN"], [(10, relu), (10, relu), (7, relu)]])
 
     # ANN for tfidf_on_words vectors
     print("Create output for 'TFIDF_On_Words' doc vectors.")
     create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
                              group3_path=TFIDF_WORDS_C_VECTORS,
-                             output_folder=ANN_TFIDF_WORDS_OUTPUT_FOLDER, alg=[ALG["ANN"]])
+                             output_folder=ANN_TFIDF_WORDS_OUTPUT_FOLDER,
+                             alg=[ALG["ANN"], [(10, relu), (10, relu), (7, relu)]])
 
     # ANN for w2v_on_lemots vectors
     print("Create output for 'W2V_On_Lemots' doc vectors.")
     create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
                              group3_path=W2V_LEMOTS_C_VECTORS,
-                             output_folder=ANN_W2V_LEMOTS_OUTPUT_FOLDER, alg=[ALG["ANN"]])
+                             output_folder=ANN_W2V_LEMOTS_OUTPUT_FOLDER,
+                             alg=[ALG["ANN"], [(10, relu), (10, relu), (7, relu)]])
 
     # ANN for w2v_on_words vectors
     print("Create output for 'W2V_On_Words' doc vectors.")
     create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
                              group3_path=W2V_WORDS_C_VECTORS,
-                             output_folder=ANN_W2V_WORDS_OUTPUT_FOLDER, alg=[ALG["ANN"]])
+                             output_folder=ANN_W2V_WORDS_OUTPUT_FOLDER,
+                             alg=[ALG["ANN"], [(10, relu), (10, relu), (7, relu)]])
+
+
+def naive_bayes_output():
+    # NB
+    print("Clustering Matrices using Naive Bayes...\n")
+
+    # NB for bert_on_source vectors
+    print("Create output for 'Bert_On_Source' doc vectors.")
+    create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
+                             group3_path=BERT_SOURCE_C_VECTORS,
+                             output_folder=NB_BERT_SOURCE_OUTPUT_FOLDER, alg=[ALG["NB"]])
+
+    # NB for d2v_on_source vectors
+    print("Create output for 'D2V_On_Source' doc vectors.")
+    create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
+                             group3_path=D2V_SOURCE_C_VECTORS,
+                             output_folder=NB_D2V_SOURCE_OUTPUT_FOLDER, alg=[ALG["NB"]])
+
+    # NB for tfidf_on_lemots vectors
+    print("Create output for 'TFIDF_On_Lemots' doc vectors.")
+    create_output_for_groups(group1_path=TFIDF_LEMOTS_A_VECTORS, group2_path=TFIDF_LEMOTS_B_VECTORS,
+                             group3_path=TFIDF_LEMOTS_C_VECTORS,
+                             output_folder=NB_TFIDF_LEMOTS_OUTPUT_FOLDER, alg=[ALG["NB"]])
+
+    # NB for tfidf_on_words vectors
+    print("Create output for 'TFIDF_On_Words' doc vectors.")
+    create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
+                             group3_path=TFIDF_WORDS_C_VECTORS,
+                             output_folder=NB_TFIDF_WORDS_OUTPUT_FOLDER, alg=[ALG["NB"]])
+
+    # NB for w2v_on_lemots vectors
+    print("Create output for 'W2V_On_Lemots' doc vectors.")
+    create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
+                             group3_path=W2V_LEMOTS_C_VECTORS,
+                             output_folder=NB_W2V_LEMOTS_OUTPUT_FOLDER, alg=[ALG["NB"]])
+
+    # NB for w2v_on_words vectors
+    print("Create output for 'W2V_On_Words' doc vectors.")
+    create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
+                             group3_path=W2V_WORDS_C_VECTORS,
+                             output_folder=NB_W2V_WORDS_OUTPUT_FOLDER, alg=[ALG["NB"]])
 
 
 def main():
-    ann_output()
+    # # ANN Clustering
+    # ann_output()
+
+    # Naive Bayes Clustering
+    naive_bayes_output()
 
 
 if __name__ == "__main__":
