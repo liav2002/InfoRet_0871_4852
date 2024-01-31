@@ -179,4 +179,4 @@ Task2/data/w2v_on_lemots/w2v_lemots_C_docvec.xlsx
 Task2/data/w2v_on_words/w2v_words_A_docvec.xlsx
 Task2/data/w2v_on_words/w2v_words_B_docvec.xlsx
 Task2/data/w2v_on_words/w2v_words_C_docvec.xlsx
-debug.py
+debug/
