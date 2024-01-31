@@ -179,3 +179,10 @@ Task2/data/w2v_on_lemots/w2v_lemots_C_docvec.xlsx
 Task2/data/w2v_on_words/w2v_words_A_docvec.xlsx
 Task2/data/w2v_on_words/w2v_words_B_docvec.xlsx
 Task2/data/w2v_on_words/w2v_words_C_docvec.xlsx
+Task2/output/ANN/TFIDF_On_Lemots_Groups/best_model_A&B.h5
+Task2/output/ANN/TFIDF_On_Lemots_Groups/best_model_A&C.h5
+Task2/output/ANN/TFIDF_On_Lemots_Groups/best_model_B&C.h5
+Task2/output/ANN/TFIDF_On_Words_Groups/best_model_A&B.h5
+Task2/output/ANN/TFIDF_On_Words_Groups/best_model_A&C.h5
+Task2/output/ANN/TFIDF_On_Words_Groups/best_model_B&C.h5
+debug/
