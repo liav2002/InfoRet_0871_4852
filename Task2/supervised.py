@@ -3,6 +3,7 @@ import json
 import numpy as np
 from Utills import *
 from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.utils import shuffle
@@ -13,7 +14,7 @@ from keras.layers import Dense, Flatten
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.activations import relu, sigmoid
 
-ALG = {"ANN": 1, "NB": 2}
+ALG = {"ANN": 1, "NB": 2, "LogisticRegression": 3}
 
 # Data Files
 
@@ -64,6 +65,14 @@ NB_TFIDF_LEMOTS_OUTPUT_FOLDER = "./output/NB/TFIDF_On_Lemots_Groups/"
 NB_TFIDF_WORDS_OUTPUT_FOLDER = "./output/NB/TFIDF_On_Words_Groups/"
 NB_W2V_LEMOTS_OUTPUT_FOLDER = "./output/NB/W2V_On_Lemots_Groups/"
 NB_W2V_WORDS_OUTPUT_FOLDER = "./output/NB/W2V_On_Words_Groups/"
+
+# LogisticRegression output
+LogisticRegression_BERT_SOURCE_OUTPUT_FOLDER = "./output/LogisticRegression/Bert_On_Source_Groups/"
+LogisticRegression_D2V_SOURCE_OUTPUT_FOLDER = "./output/LogisticRegression/D2V_On_Source_Groups/"
+LogisticRegression_TFIDF_LEMOTS_OUTPUT_FOLDER = "./output/LogisticRegression/TFIDF_On_Lemots_Groups/"
+LogisticRegression_TFIDF_WORDS_OUTPUT_FOLDER = "./output/LogisticRegression/TFIDF_On_Words_Groups/"
+LogisticRegression_W2V_LEMOTS_OUTPUT_FOLDER = "./output/LogisticRegression/W2V_On_Lemots_Groups/"
+LogisticRegression_W2V_WORDS_OUTPUT_FOLDER = "./output/LogisticRegression/W2V_On_Words_Groups/"
 
 
 class ANN_C:
@@ -219,9 +228,72 @@ class NB_C:
         train_vectors, val_vectors, train_labels, val_labels = train_test_split(train_vectors, train_labels,
                                                                                 test_size=0.1, random_state=42)
 
-        # Create and fit the Naive Bayes model
-        print("Training model...")
+        # Create the Naive Bayes model
         model = GaussianNB()
+
+        # Fit the Naive Bayes model
+        print("Training model...")
+        model.fit(train_vectors, train_labels)
+        print("Model training finished.")
+
+        # Evaluate and save results
+        self.evaluate_and_save_results(model, test_vectors, test_labels, pair_name)
+
+
+class LogisticRegression_C:
+    def __init__(self, output_folder):
+        self.output_folder = output_folder
+
+    def evaluate_and_save_results(self, model, test_data, test_labels, pair_name):
+        print("Evaluate results:")
+        predictions = model.predict(test_data)
+
+        accuracy = accuracy_score(test_labels, predictions)
+        precision = precision_score(test_labels, predictions)
+        recall = recall_score(test_labels, predictions)
+        f1 = f1_score(test_labels, predictions)
+
+        # Save results to a JSON file
+        result = {
+            'accuracy': accuracy,
+            'precision': precision,
+            'recall': recall,
+            'f1': f1
+        }
+        result_path = os.path.join(self.output_folder, f'result_{pair_name}.json')
+        with open(result_path, 'w') as json_file:
+            json.dump(result, json_file)
+        print(f"Evaluate result saved in: {result_path}")
+
+        # Visualize in UMAP
+        umap = TSNE(n_components=2, random_state=42)
+        umap_vectors = umap.fit_transform(test_data)
+
+        plt.scatter(umap_vectors[:, 0], umap_vectors[:, 1], c=test_labels, cmap='viridis', s=5)
+        plt.title(f'UMAP Visualization for {pair_name} Pair')
+        save_path = os.path.join(self.output_folder, f'umap_{pair_name}.png')
+        plt.savefig(save_path)
+        print(f"UMAP plot saved in: {save_path}\n\n")
+
+    def run_experiment(self, vectors1, vectors2, pair_name):
+        print(f"Working on pair: {pair_name} ...")
+
+        # Combine vectors and create labels
+        all_vectors = np.vstack((vectors1, vectors2))
+        all_labels = np.hstack((np.zeros(len(vectors1)), np.ones(len(vectors2))))
+
+        # Shuffle and split data
+        all_vectors, all_labels = shuffle(all_vectors, all_labels, random_state=42)
+        train_vectors, test_vectors, train_labels, test_labels = train_test_split(all_vectors, all_labels,
+                                                                                  test_size=0.2, random_state=42)
+        train_vectors, val_vectors, train_labels, val_labels = train_test_split(train_vectors, train_labels,
+                                                                                test_size=0.1, random_state=42)
+
+        # Create the Logistic Regression model
+        model = LogisticRegression(random_state=42)
+
+        # Fit the Logistic Regression model
+        print("Training model...")
         model.fit(train_vectors, train_labels)
         print("Model training finished.")
 
@@ -257,6 +329,9 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
         elif alg[0] == ALG["NB"]:
             nb = NB_C(output_folder=output_folder)
             nb.run_experiment(vectors1, vectors2, pair_describe)
+        elif alg[0] == ALG["LogisticRegression"]:
+            lr = LogisticRegression_C(output_folder=output_folder)
+            lr.run_experiment(vectors1, vectors2, pair_describe)
 
 
 def ann_output():
@@ -347,12 +422,62 @@ def naive_bayes_output():
                              output_folder=NB_W2V_WORDS_OUTPUT_FOLDER, alg=[ALG["NB"]])
 
 
+def logistic_regression_output():
+    # Logistic Regression
+    print("Clustering Matrices using Logistic Regression...\n")
+
+    # Logistic Regression for bert_on_source vectors
+    print("Create output for 'Bert_On_Source' doc vectors.")
+    create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
+                             group3_path=BERT_SOURCE_C_VECTORS,
+                             output_folder=LogisticRegression_BERT_SOURCE_OUTPUT_FOLDER,
+                             alg=[ALG["LogisticRegression"]])
+
+    # Logistic Regression for d2v_on_source vectors
+    print("Create output for 'D2V_On_Source' doc vectors.")
+    create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
+                             group3_path=D2V_SOURCE_C_VECTORS,
+                             output_folder=LogisticRegression_D2V_SOURCE_OUTPUT_FOLDER,
+                             alg=[ALG["LogisticRegression"]])
+
+    # Logistic Regression for tfidf_on_lemots vectors
+    print("Create output for 'TFIDF_On_Lemots' doc vectors.")
+    create_output_for_groups(group1_path=TFIDF_LEMOTS_A_VECTORS, group2_path=TFIDF_LEMOTS_B_VECTORS,
+                             group3_path=TFIDF_LEMOTS_C_VECTORS,
+                             output_folder=LogisticRegression_TFIDF_LEMOTS_OUTPUT_FOLDER,
+                             alg=[ALG["LogisticRegression"]])
+
+    # Logistic Regression for tfidf_on_words vectors
+    print("Create output for 'TFIDF_On_Words' doc vectors.")
+    create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
+                             group3_path=TFIDF_WORDS_C_VECTORS,
+                             output_folder=LogisticRegression_TFIDF_WORDS_OUTPUT_FOLDER,
+                             alg=[ALG["LogisticRegression"]])
+
+    # Logistic Regression for w2v_on_lemots vectors
+    print("Create output for 'W2V_On_Lemots' doc vectors.")
+    create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
+                             group3_path=W2V_LEMOTS_C_VECTORS,
+                             output_folder=LogisticRegression_W2V_LEMOTS_OUTPUT_FOLDER,
+                             alg=[ALG["LogisticRegression"]])
+
+    # Logistic Regression for w2v_on_words vectors
+    print("Create output for 'W2V_On_Words' doc vectors.")
+    create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
+                             group3_path=W2V_WORDS_C_VECTORS,
+                             output_folder=LogisticRegression_W2V_WORDS_OUTPUT_FOLDER,
+                             alg=[ALG["LogisticRegression"]])
+
+
 def main():
     # # ANN Clustering
     # ann_output()
 
-    # Naive Bayes Clustering
-    naive_bayes_output()
+    # # Naive Bayes Clustering
+    # naive_bayes_output()
+
+    # Logistic Regression Clustering
+    logistic_regression_output()
 
 
 if __name__ == "__main__":
