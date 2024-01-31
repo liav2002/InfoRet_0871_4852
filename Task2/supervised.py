@@ -220,8 +220,10 @@ class NB_C:
                                                                                 test_size=0.1, random_state=42)
 
         # Create and fit the Naive Bayes model
+        print("Training model...")
         model = GaussianNB()
         model.fit(train_vectors, train_labels)
+        print("Model training finished.")
 
         # Evaluate and save results
         self.evaluate_and_save_results(model, test_vectors, test_labels, pair_name)
@@ -252,7 +254,7 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
         if alg[0] == ALG["ANN"]:
             ann = ANN_C(output_folder=output_folder, topology=alg[1])
             ann.run_experiment(vectors1, vectors2, pair_describe)
-        elif alg[1] == ALG["NB"]:
+        elif alg[0] == ALG["NB"]:
             nb = NB_C(output_folder=output_folder)
             nb.run_experiment(vectors1, vectors2, pair_describe)
 
@@ -346,8 +348,8 @@ def naive_bayes_output():
 
 
 def main():
-    # ANN Clustering
-    ann_output()
+    # # ANN Clustering
+    # ann_output()
 
     # Naive Bayes Clustering
     naive_bayes_output()
