@@ -1431,3 +1431,496 @@ Then I use the truth labels and the predicted labels for evaluate the results.
 
 ![Alt Text](output/ANN/W2V_On_Words_Groups/umap_B&C.png)
 
+# Naive Bayes
+
+**Liav Ariel was Assigned to this task.**
+
+Naive Bayes get the numpy array of vectors and the list of labels suitable to any vector index.
+
+I shuffled the both of arrays, for make the learning process randomly.
+
+Then, I split the data into: train_vectors and test_vectors (20% I used for testing & 80% for learning).
+
+I'm also split the 80% of learning data into: train_vectors, val_vectors (10% I used for validation & 90% for learning).
+
+The result will list of labels, every index will represent the label that Naive Bayes chose for the vector in the same
+index.
+
+Then I use the truth labels and the predicted labels for evaluate the results.
+
+**Let's see the results:**
+
+> **Naive Bayes on Bert On Source matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.612987012987013   | 0.23910840932117527 | 0.34402332361516036 | 0.55                |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/Bert_On_Source_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.6659340659340659  | 0.3069908814589666  | 0.42024965325936203 | 0.582               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/Bert_On_Source_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.5783333333333334  | 0.3515704154002026  | 0.4373030875866415  | 0.5535              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/Bert_On_Source_Groups/umap_B&C.png)
+
+> **Naive Bayes on D2V On Source matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.5847328244274809  | 0.3880445795339412  | 0.46650426309378806 | 0.562               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/D2V_On_Source_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.9546891464699684  | 0.9179331306990881  | 0.9359504132231405  | 0.938               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/D2V_On_Source_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.9606801275239107  | 0.9159067882472138  | 0.9377593360995851  | 0.94                |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/D2V_On_Source_Groups/umap_B&C.png)
+
+> **Naive Bayes on TFIDF On Lemmas matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.8512960436562074  | 0.6322188449848024  | 0.7255813953488373  | 0.764               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/TFIDF_On_Lemots_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.9093050647820966  | 0.7821681864235056  | 0.840958605664488   | 0.854               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/TFIDF_On_Lemots_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.7953488372093023  | 0.8662613981762918  | 0.8292919495635305  | 0.824               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/TFIDF_On_Lemots_Groups/umap_B&C.png)
+
+> **Naive Bayes on TFIDF On Words matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.9037758830694276  | 0.75177304964539    | 0.8207964601769911  | 0.838               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/TFIDF_On_Words_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.9394594594594594  | 0.8804457953394124  | 0.9089958158995816  | 0.913               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/TFIDF_On_Words_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.8240302743614002  | 0.8824721377912867  | 0.8522504892367906  | 0.849               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/TFIDF_On_Words_Groups/umap_B&C.png)
+
+> **Naive Bayes on W2V On Lemmas matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.6098654708520179  | 0.2755825734549139  | 0.3796231681786462  | 0.5555              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/W2V_On_Lemots_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.6510067114093959  | 0.2948328267477204  | 0.40585774058577406 | 0.574               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/W2V_On_Lemots_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.7138964577656676  | 0.26545086119554206 | 0.3870014771048744  | 0.585               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/W2V_On_Lemots_Groups/umap_B&C.png)
+
+> **Naive Bayes on W2V On Words matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.625               | 0.2735562310030395  | 0.38054968287526425 | 0.5605              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/W2V_On_Words_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.6409574468085106  | 0.24417426545086118 | 0.3536316947909024  | 0.5595              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/W2V_On_Words_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.5097911227154047  | 0.7912867274569402  | 0.6200873362445416  | 0.5215              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/NB/W2V_On_Words_Groups/umap_B&C.png
+
+# Logistic Regression
+
+**Liav Ariel was Assigned to this task.**
+
+Logistic Regression get the numpy array of vectors and the list of labels suitable to any vector index.
+
+I shuffled the both of arrays, for make the learning process randomly.
+
+Then, I split the data into: train_vectors and test_vectors (20% I used for testing & 80% for learning).
+
+I'm also split the 80% of learning data into: train_vectors, val_vectors (10% I used for validation & 90% for learning).
+
+The result will list of labels, every index will represent the label that Logistic Regression chose for the vector in the same
+index.
+
+Then I use the truth labels and the predicted labels for evaluate the results.
+
+**Let's see the results:**
+
+> **Logistic Regression on Bert On Source matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.7136194029850746  | 0.7750759878419453  | 0.7430791646430306  | 0.7355              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/Bert_On_Source_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.8439581351094196  | 0.8986828774062816  | 0.8704612365063789  | 0.868               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/Bert_On_Source_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.775023832221163   | 0.8237082066869301  | 0.7986247544204321  | 0.795               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/Bert_On_Source_Groups/umap_B&C.png)
+
+> **Logistic Regression on D2V On Source matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.6270853778213935  | 0.6474164133738601  | 0.6370887337986041  | 0.636               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/D2V_On_Source_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.9989878542510121  | 1.0                 | 0.9994936708860759  | 0.9995              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/D2V_On_Source_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.9989878542510121  | 1.0                 | 0.9994936708860759  | 0.9995              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/D2V_On_Source_Groups/umap_B&C.png)
+
+> **Logistic Regression on TFIDF On Lemmas matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.8616915422885573  | 0.8774062816616008  | 0.8694779116465864  | 0.87                |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/TFIDF_On_Lemots_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.9233067729083665  | 0.939209726443769   | 0.9311903566047212  | 0.9315              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/TFIDF_On_Lemots_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.8635926993275697  | 0.9108409321175278  | 0.8865877712031558  | 0.885               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/TFIDF_On_Lemots_Groups/umap_B&C.png)
+
+> **Logistic Regression on TFIDF On Words matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.8481624758220503  | 0.8885511651469098  | 0.867887184562098   | 0.8665              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/TFIDF_On_Words_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.9225490196078432  | 0.9533941236068896  | 0.9377179870453414  | 0.9375              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/TFIDF_On_Words_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.8629191321499013  | 0.8865248226950354  | 0.8745627186406797  | 0.8745              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/TFIDF_On_Words_Groups/umap_B&C.png)
+
+> **Logistic Regression on W2V On Lemmas matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.6905965621840243  | 0.6919959473150963  | 0.6912955465587045  | 0.695               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/W2V_On_Lemots_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.7353535353535353  | 0.7375886524822695  | 0.7364693980778957  | 0.7395              |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/W2V_On_Lemots_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.6914175506268081  | 0.7264437689969605  | 0.7084980237154149  | 0.705               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/W2V_On_Lemots_Groups/umap_B&C.png)
+
+> **Logistic Regression on W2V On Words matrices**
+
+**For A & B groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.6821256038647343  | 0.7152988855116514  | 0.6983184965380812  | 0.695               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/W2V_On_Words_Groups/umap_A&B.png)
+
+**For A & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.7094918504314478  | 0.7497467071935157  | 0.729064039408867   | 0.725               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/W2V_On_Words_Groups/umap_A&C.png)
+
+**For B & C groups:**
+
+**Results**
+
+| precision           | recall              | f1                  | accuracy            |
+|---------------------|---------------------|---------------------|---------------------|
+| 0.6693914623069936  | 0.7467071935157041  | 0.7059386973180077  | 0.693               |
+
+**Visualization using UMAP:**
+
+![Alt Text](output/LogisticRegression/W2V_On_Words_Groups/umap_B&C.png)
