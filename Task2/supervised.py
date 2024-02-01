@@ -470,11 +470,11 @@ def logistic_regression_output():
 
 
 def main():
-    # # ANN Clustering
-    # ann_output()
+    # ANN Clustering
+    ann_output()
 
-    # # Naive Bayes Clustering
-    # naive_bayes_output()
+    # Naive Bayes Clustering
+    naive_bayes_output()
 
     # Logistic Regression Clustering
     logistic_regression_output()
