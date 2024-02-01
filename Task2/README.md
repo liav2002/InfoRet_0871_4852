@@ -77,7 +77,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\Bert_On_Source_Groups\tsne_A&B.png)
+![Alt Text](output/K-means/Bert_On_Source_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -88,7 +88,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\Bert_On_Source_Groups\tsne_A&C.png)
+![Alt Text](output/K-means/Bert_On_Source_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -99,7 +99,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\Bert_On_Source_Groups\tsne_B&C.png)
+![Alt Text](output/K-means/Bert_On_Source_Groups/tsne_B&C.png)
 
 > **K-means on D2V On Source matrices**
 
@@ -114,7 +114,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\D2V_On_Source_Groups\tsne_A&B.png)
+![Alt Text](output/K-means/D2V_On_Source_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -125,7 +125,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\D2V_On_Source_Groups\tsne_A&C.png)
+![Alt Text](output/K-means/D2V_On_Source_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -136,7 +136,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\D2V_On_Source_Groups\tsne_B&C.png)
+![Alt Text](output/K-means/D2V_On_Source_Groups/tsne_B&C.png)
 
 > **K-means on TFIDF On Lemmas matrices**
 
@@ -151,7 +151,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\TFIDF_On_Lemots_Groups\tsne_A&B.png)
+![Alt Text](output/K-means/TFIDF_On_Lemots_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -162,7 +162,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\TFIDF_On_Lemots_Groups\tsne_A&C.png)
+![Alt Text](output/K-means/TFIDF_On_Lemots_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -173,7 +173,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\TFIDF_On_Lemots_Groups\tsne_B&C.png)
+![Alt Text](output/K-means/TFIDF_On_Lemots_Groups/tsne_B&C.png)
 
 > **K-means on TFIDF On Words matrices**
 
@@ -188,7 +188,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\TFIDF_On_Words_Groups\tsne_A&B.png)
+![Alt Text](output/K-means/TFIDF_On_Words_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -199,7 +199,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\TFIDF_On_Words_Groups\tsne_A&C.png)
+![Alt Text](output/K-means/TFIDF_On_Words_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -210,7 +210,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\TFIDF_On_Words_Groups\tsne_B&C.png)
+![Alt Text](output/K-means/TFIDF_On_Words_Groups/tsne_B&C.png)
 
 > **K-means on W2V On Lemmas matrices**
 
@@ -225,7 +225,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\W2V_On_Lemots_Groups\tsne_A&B.png)
+![Alt Text](output/K-means/W2V_On_Lemots_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -236,7 +236,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\W2V_On_Lemots_Groups\tsne_A&C.png)
+![Alt Text](output/K-means/W2V_On_Lemots_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -247,7 +247,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\W2V_On_Lemots_Groups\tsne_B&C.png)
+![Alt Text](output/K-means/W2V_On_Lemots_Groups/tsne_B&C.png)
 
 > **K-means on W2V On Words matrices**
 
@@ -262,7 +262,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\W2V_On_Words_Groups\tsne_A&B.png)
+![Alt Text](output/K-means/W2V_On_Words_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -273,7 +273,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\W2V_On_Words_Groups\tsne_A&C.png)
+![Alt Text](output/K-means/W2V_On_Words_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -284,7 +284,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\K-means\W2V_On_Words_Groups\tsne_B&C.png)
+![Alt Text](output/K-means/W2V_On_Words_Groups/tsne_B&C.png)
 
 # DBSCAN
 
@@ -312,7 +312,7 @@ I plot a graph f(x) of K-Distance as a function of number of points.
 
 > **Epsilon parameter for on Bert On Source matrices**
 
-![Alt Text](output\DBSCAN\Bert_On_Source_Groups\k_distance_graph_BC.png)
+![Alt Text](output/DBSCAN/Bert_On_Source_Groups/k_distance_graph_BC.png)
 
 We can see that there is a knee on K-distance of 8.
 
@@ -324,7 +324,7 @@ So I set:
 
 Let's add to the plot the graph for D2V On Source matrices:
 
-![Alt Text](output\DBSCAN\D2V_On_Source_Groups\k_distance_graph_BC.png)
+![Alt Text](output/DBSCAN/D2V_On_Source_Groups/k_distance_graph_BC.png)
 
 We can see that the graphs are under Bert matrices and there is a knee on K-distance of 5.
 
@@ -338,13 +338,13 @@ So I set:
 
 Let's add to the plot the graph for TFIDF On Lemmas matrices:
 
-![Alt Text](output\DBSCAN\TFIDF_On_Lemots_Groups\k_distance_graph_BC.png)
+![Alt Text](output/DBSCAN/TFIDF_On_Lemots_Groups/k_distance_graph_BC.png)
 
 **TFIDF On Words matrices**
 
 Let's add to the plot the graph for TFIDF On Words matrices:
 
-![Alt Text](output\DBSCAN\TFIDF_On_Words_Groups\k_distance_graph_BC.png)
+![Alt Text](output/DBSCAN/TFIDF_On_Words_Groups/k_distance_graph_BC.png)
 
 We can see that the graphs of the both groups are above the previous ones and there is a knee on K-distance of 30.
 
@@ -358,13 +358,13 @@ So I set:
 
 Let's add to the plot the graph for W2V On Lemmas matrices:
 
-![Alt Text](output\DBSCAN\W2V_On_Lemots_Groups\k_distance_graph_BC.png)
+![Alt Text](output/DBSCAN/W2V_On_Lemots_Groups/k_distance_graph_BC.png)
 
 **W2V On Words matrices**
 
 Let's add to the plot the graph for W2V On Words matrices:
 
-![Alt Text](output\DBSCAN\W2V_On_Words_Groups\k_distance_graph_BC.png)
+![Alt Text](output/DBSCAN/W2V_On_Words_Groups/k_distance_graph_BC.png)
 
 We can see that the graphs of the both groups are extremely above the previous ones and there is a knee on K-distance of 450.
 
@@ -396,7 +396,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\Bert_On_Source_Groups\umap_A&B.png)
+![Alt Text](output/DBSCAN/Bert_On_Source_Groups/umap_A&B.png)
 
 **For A & C groups:**
 
@@ -407,7 +407,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\Bert_On_Source_Groups\umap_A&C.png)
+![Alt Text](output/DBSCAN/Bert_On_Source_Groups/umap_A&C.png)
 
 **For B & C groups:**
 
@@ -418,7 +418,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\Bert_On_Source_Groups\umap_B&C.png)
+![Alt Text](output/DBSCAN/Bert_On_Source_Groups/umap_B&C.png)
 
 > **DBSCAN on D2V On Source matrices**
 
@@ -433,7 +433,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\D2V_On_Source_Groups\umap_A&B.png)
+![Alt Text](output/DBSCAN/D2V_On_Source_Groups/umap_A&B.png)
 
 **For A & C groups:**
 
@@ -444,7 +444,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\D2V_On_Source_Groups\umap_A&C.png)
+![Alt Text](output/DBSCAN/D2V_On_Source_Groups/umap_A&C.png)
 
 **For B & C groups:**
 
@@ -455,7 +455,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\D2V_On_Source_Groups\umap_B&C.png)
+![Alt Text](output/DBSCAN/D2V_On_Source_Groups/umap_B&C.png)
 
 > **DBSCAN on TFIDF On Lemmas matrices**
 
@@ -470,7 +470,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\TFIDF_On_Lemots_Groups\umap_A&B.png)
+![Alt Text](output/DBSCAN/TFIDF_On_Lemots_Groups/umap_A&B.png)
 
 **For A & C groups:**
 
@@ -481,7 +481,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\TFIDF_On_Lemots_Groups\umap_A&C.png)
+![Alt Text](output/DBSCAN/TFIDF_On_Lemots_Groups/umap_A&C.png)
 
 **For B & C groups:**
 
@@ -492,7 +492,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\TFIDF_On_Lemots_Groups\umap_B&C.png)
+![Alt Text](output/DBSCAN/TFIDF_On_Lemots_Groups/umap_B&C.png)
 
 > **DBSCAN on TFIDF On Words matrices**
 
@@ -507,7 +507,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\TFIDF_On_Words_Groups\umap_A&B.png)
+![Alt Text](output/DBSCAN/TFIDF_On_Words_Groups/umap_A&B.png)
 
 **For A & C groups:**
 
@@ -518,7 +518,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\TFIDF_On_Words_Groups\umap_A&C.png)
+![Alt Text](output/DBSCAN/TFIDF_On_Words_Groups/umap_A&C.png)
 
 **For B & C groups:**
 
@@ -529,7 +529,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\TFIDF_On_Words_Groups\umap_B&C.png)
+![Alt Text](output/DBSCAN/TFIDF_On_Words_Groups/umap_B&C.png)
 
 > **DBSCAN on W2V On Lemmas matrices**
 
@@ -544,7 +544,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\W2V_On_Lemots_Groups\umap_A&B.png)
+![Alt Text](output/DBSCAN/W2V_On_Lemots_Groups/umap_A&B.png)
 
 **For A & C groups:**
 
@@ -555,7 +555,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\W2V_On_Lemots_Groups\umap_A&C.png)
+![Alt Text](output/DBSCAN/W2V_On_Lemots_Groups/umap_A&C.png)
 
 **For B & C groups:**
 
@@ -566,7 +566,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\W2V_On_Lemots_Groups\umap_B&C.png)
+![Alt Text](output/DBSCAN/W2V_On_Lemots_Groups/umap_B&C.png)
 
 > **DBSCAN on W2V On Words matrices**
 
@@ -581,7 +581,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\W2V_On_Words_Groups\umap_A&B.png)
+![Alt Text](output/DBSCAN/W2V_On_Words_Groups/umap_A&B.png)
 
 **For A & C groups:**
 
@@ -592,7 +592,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\W2V_On_Words_Groups\umap_A&C.png)
+![Alt Text](output/DBSCAN/W2V_On_Words_Groups/umap_A&C.png)
 
 **For B & C groups:**
 
@@ -603,13 +603,13 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 **Visualization using UMAP:**
 
-![Alt Text](output\DBSCAN\W2V_On_Words_Groups\umap_B&C.png)
+![Alt Text](output/DBSCAN/W2V_On_Words_Groups/umap_B&C.png)
 
-# Mixure of Gaussian
+# Mixture of Gaussian
 
 **Liav Ariel was Assigned to this task.**
 
-Mixure of Gaussian get only the numpy array of vectors with n_components=2 parameter of 2 and do his operation.
+Mixture of Gaussian get only the numpy array of vectors with n_components=2 parameter of 2 and do his operation.
 
 The result will list of labels, every index will represent the label that K-means choose for the vector in the same
 index.
@@ -621,7 +621,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 1. pair[0] as label 0 and pair[1] as label 1.
 2. pair[0] as label 1 and pair[1] as label 0.
 
-> **Mixure of Gaussian on Bert On Source matrices**
+> **Mixture of Gaussian on Bert On Source matrices**
 
 **Results**
 
@@ -634,7 +634,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\Bert_On_Source_Groups\tsne_A&B.png)
+![Alt Text](output/MixOG/Bert_On_Source_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -645,7 +645,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\Bert_On_Source_Groups\tsne_A&C.png)
+![Alt Text](output/MixOG/Bert_On_Source_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -656,9 +656,9 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\Bert_On_Source_Groups\tsne_B&C.png)
+![Alt Text](output/MixOG/Bert_On_Source_Groups/tsne_B&C.png)
 
-> **Mixure of Gaussian on D2V On Source matrices**
+> **Mixture of Gaussian on D2V On Source matrices**
 
 **Results**
 
@@ -671,7 +671,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\D2V_On_Source_Groups\tsne_A&B.png)
+![Alt Text](output/MixOG/D2V_On_Source_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -682,7 +682,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\D2V_On_Source_Groups\tsne_A&C.png)
+![Alt Text](output/MixOG/D2V_On_Source_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -693,9 +693,9 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\D2V_On_Source_Groups\tsne_B&C.png)
+![Alt Text](output/MixOG/D2V_On_Source_Groups/tsne_B&C.png)
 
-> **Mixure of Gaussian on TFIDF On Lemmas matrices**
+> **Mixture of Gaussian on TFIDF On Lemmas matrices**
 
 **Results**
 
@@ -708,7 +708,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\TFIDF_On_Lemots_Groups\tsne_A&B.png)
+![Alt Text](output/MixOG/TFIDF_On_Lemots_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -719,7 +719,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\TFIDF_On_Lemots_Groups\tsne_A&C.png)
+![Alt Text](output/MixOG/TFIDF_On_Lemots_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -730,9 +730,9 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\TFIDF_On_Lemots_Groups\tsne_B&C.png)
+![Alt Text](output/MixOG/TFIDF_On_Lemots_Groups/tsne_B&C.png)
 
-> **Mixure of Gaussian on TFIDF On Words matrices**
+> **Mixture of Gaussian on TFIDF On Words matrices**
 
 **Results**
 
@@ -745,7 +745,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\TFIDF_On_Words_Groups\tsne_A&B.png)
+![Alt Text](output/MixOG/TFIDF_On_Words_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -756,7 +756,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\TFIDF_On_Words_Groups\tsne_A&C.png)
+![Alt Text](output/MixOG/TFIDF_On_Words_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -767,9 +767,9 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\TFIDF_On_Words_Groups\tsne_B&C.png)
+![Alt Text](output/MixOG/TFIDF_On_Words_Groups/tsne_B&C.png)
 
-> **Mixure of Gaussian on W2V On Lemmas matrices**
+> **Mixture of Gaussian on W2V On Lemmas matrices**
 
 **Results**
 
@@ -782,7 +782,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\W2V_On_Lemots_Groups\tsne_A&B.png)
+![Alt Text](output/MixOG/W2V_On_Lemots_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -793,7 +793,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\W2V_On_Lemots_Groups\tsne_A&C.png)
+![Alt Text](output/MixOG/W2V_On_Lemots_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -804,9 +804,9 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\W2V_On_Lemots_Groups\tsne_B&C.png)
+![Alt Text](output/MixOG/W2V_On_Lemots_Groups/tsne_B&C.png)
 
-> **Mixure of Gaussian on W2V On Words matrices**
+> **Mixture of Gaussian on W2V On Words matrices**
 
 **Results**
 
@@ -819,7 +819,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\W2V_On_Words_Groups\tsne_A&B.png)
+![Alt Text](output/MixOG/W2V_On_Words_Groups/tsne_A&B.png)
 
 **For A & C groups:**
 
@@ -830,7 +830,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\W2V_On_Words_Groups\tsne_A&C.png)
+![Alt Text](output/MixOG/W2V_On_Words_Groups/tsne_A&C.png)
 
 **For B & C groups:**
 
@@ -841,7 +841,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 **Visualization using t-SNE:**
 
-![Alt Text](output\MixOG\W2V_On_Words_Groups\tsne_B&C.png)
+![Alt Text](output/MixOG/W2V_On_Words_Groups/tsne_B&C.png)
 
 # Supervised Classifiers:
 
