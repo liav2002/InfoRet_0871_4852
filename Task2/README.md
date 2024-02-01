@@ -292,7 +292,7 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 
 DBSCAN also get only the numpy array of vectors with epsilon & min_samples parameters.
 
-The result will list of labels, every index will represent the label that K-means choose for the vector in the same
+The result will list of labels, every index will represent the label that DBSCAN chose for the vector in the same
 index.
 
 Then I use the truth labels and the predicted labels for evaluate the results.
@@ -611,7 +611,7 @@ I saved the parameters in: "./input/dbscan-eps.json":
 
 Mixture of Gaussian get only the numpy array of vectors with n_components=2 parameter of 2 and do his operation.
 
-The result will list of labels, every index will represent the label that K-means choose for the vector in the same
+The result will list of labels, every index will represent the label that Mixture of Gaussian chose for the vector in the same
 index.
 
 Then I use the truth labels and the predicted labels for evaluate the results.
@@ -844,4 +844,32 @@ I can't know which label the classifier chose for each group, so I'm trying to e
 ![Alt Text](output/MixOG/W2V_On_Words_Groups/tsne_B&C.png)
 
 # Supervised Classifiers:
+
+# ANN
+
+**Liav Ariel was Assigned to this task.**
+
+ANN get the numpy array of vectors and the list of labels suitable to any vector index.
+
+I shuffled the both of arrays, for make the learning process randomly.
+
+Then, I split the data into: train_vectors and test_vectors (20% I used for testing & 80% for learning).
+I'm also split the 80% of learning data into: train_vectors, val_vectors (10% I used for validation & 90% for learning).
+
+Paraemeters I used for the Neural Network:
+
+1. EPOCHS = 15.
+2. BATCH_SIZE = 128.
+3. TOPOLOGY, there is two options: 
+   1. [(10, relu), (10, relu), (7, relu)]
+   2. [(10, gelu), (10, gelu), (7, gelu)]
+   * every pair in the list represent: (layer_size, activation_func) as a Dense Layer.
+
+
+The result will list of labels, every index will represent the label that ANN chose for the vector in the same
+index.
+
+Then I use the truth labels and the predicted labels for evaluate the results.
+
+**Results**
 
