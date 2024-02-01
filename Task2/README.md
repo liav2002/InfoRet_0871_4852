@@ -24,7 +24,7 @@ Bayes, Logistic Regression).
 
 This report will discuss how we work and the results.
 
-# How used the data of matrices:
+# How I used the data of matrices:
 
 I retrieved all groups of matrices to data structure of list of lists:
 
