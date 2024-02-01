@@ -854,6 +854,7 @@ ANN get the numpy array of vectors and the list of labels suitable to any vector
 I shuffled the both of arrays, for make the learning process randomly.
 
 Then, I split the data into: train_vectors and test_vectors (20% I used for testing & 80% for learning).
+
 I'm also split the 80% of learning data into: train_vectors, val_vectors (10% I used for validation & 90% for learning).
 
 Paraemeters I used for the Neural Network:
