@@ -11,7 +11,7 @@ Every group with 5000 documets, and total number of documets is 15000.
 
 **Liav Ariel was Assigned to this task.**
 
-![Alt Text](Task2/output/K-means/Bert_On_Source_Groups/tsne_A&B.png)
+![Alt Text](output/K-means/Bert_On_Source_Groups/tsne_A&B.png)
 
 Explenation of Steps to clean up the data:
 
