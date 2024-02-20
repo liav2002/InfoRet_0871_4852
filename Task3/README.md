@@ -177,6 +177,10 @@ I write script that scan all the translated data.
 
 For every document I do Sentiment Tagging using 'vaderSentiment'.
 
+**Link I used for learning this model:**
+
+1. https://reshetech.co.il/machine-learning-tutorials/sentiment-analysis-in-hebrew-kind-of
+
 I create new Excel file that contains the same information as the translated data but with some new columns:
 
 1. Sentiment: column of the decided label of tagging - 'Positive' / 'Negative' / 'Neutral'.
@@ -229,19 +233,215 @@ I decided according to 'compound_score':
 | B     | 56.7 %   | 40.58 %  | 2.72 %  |
 | C     | 53.2 %   | 42.24 %  | 4.56 %  | 
 
-> **Sentiment On Source Data Using 'heBert-Sentiment':**
+**Conclusion:**
+
+The results look good, but I would expect different results because I have prior knowledge of the data that is supposed to be more negative.
+
+I think, my classification decision according to the 'compound_score' is incorrect.
+
+Therefore, I decide to run another experience, but now I decide to tag every document according to this rules:
+
+1. 'compound_score' > 1/3 ==> 'Positive'.
+2. -1/3 < 'compound_score' < 1/3 ==> 'Neutral'.
+3. 'compound_score' < -1/3 ==> 'Negative'.
+
+I save the result output here:
+
+1. './output/tagged_translated_15000_docs/tagged_translated_A_NEW.xlsx'
+2. './output/tagged_translated_15000_docs/tagged_translated_B_NEW.xlsx'
+3. './output/tagged_translated_15000_docs/tagged_translated_C_NEW.xlsx'
+4. './output/tagged_translated_15000_docs/result_translated_A_NEW.json'
+5. './output/tagged_translated_15000_docs/result_translated_B_NEW.json'
+6. './output/tagged_translated_15000_docs/result_translated_C_NEW.json'
+
+**Let's discuss the results:**
+
+| Group | Positive | Negative | Neutral |
+|-------|----------|----------|---------|
+| A     |          |          |         |
+| B     |          |          |         |
+| C     |          |          |         | 
+
+**Conclusion:**
+
+
+
+> **Sentiment Task Using 'heBert-Sentiment':**
 
 **Nehorai Josef was Assigned to this task.**
 
 **Script path:** 
 
-1. './tag_translated_data.py'
+1. './tag_with_heBert.py'
 
 **Output path:** 
 
-1. './output/tagged_translated_15000_docs/tagged_translated_A.xlsx'
-2. './output/tagged_translated_15000_docs/tagged_translated_B.xlsx'
-3. './output/tagged_translated_15000_docs/tagged_translated_C.xlsx'
-4. './output/tagged_translated_15000_docs/result_translated_A.json'
-5. './output/tagged_translated_15000_docs/result_translated_B.json'
-6. './output/tagged_translated_15000_docs/result_translated_C.json'
+1. './output/tagged_heBert_15000_docs/tagged_with_heBert_A.xlsx'
+2. './output/tagged_heBert_15000_docs/tagged_with_heBert_B.xlsx'
+3. './output/tagged_heBert_15000_docs/tagged_with_heBert_C.xlsx'
+4. './output/tagged_heBert_15000_docs/result_heBert_A.json'
+5. './output/tagged_heBert_15000_docs/result_heBert_B.json'
+6. './output/tagged_heBert_15000_docs/result_heBert_C.json'
+7. './output/tagged_heBert_15000_without_names_docs/tagged_heBert_without_names_A.xlsx'
+8. './output/tagged_heBert_15000_without_names_docs/tagged_heBert_without_names_B.xlsx'
+9. './output/tagged_heBert_15000_without_names_docs/tagged_heBert_without_names_C.xlsx'
+10. './output/tagged_heBert_15000_without_names_docs/result_heBert_without_names_A.json'
+11. './output/tagged_heBert_15000_without_names_docs/result_heBert_without_names_B.json'
+12. './output/tagged_heBert_15000_without_names_docs/result_heBert_without_names_C.json'
+
+I do the same as before, just now I work on hebrew data with heBert-Sentiment pre-trained model.
+First, on the source data.
+Second, on the data without names.
+
+**Link for the model:**
+
+1. https://huggingface.co/avichr/heBERT_sentiment_analysis
+
+**How to Use:**
+
+**For sentiment classification model (polarity ONLY):**
+
+```python
+from transformers import AutoTokenizer, AutoModel, pipeline
+tokenizer = AutoTokenizer.from_pretrained("avichr/heBERT_sentiment_analysis") #same as 'avichr/heBERT' tokenizer
+model = AutoModel.from_pretrained("avichr/heBERT_sentiment_analysis")
+
+# how to use?
+sentiment_analysis = pipeline(
+    "sentiment-analysis",
+    model="avichr/heBERT_sentiment_analysis",
+    tokenizer="avichr/heBERT_sentiment_analysis",
+    return_all_scores = True
+)
+
+>>>  sentiment_analysis('אני מתלבט מה לאכול לארוחת צהריים')	
+[[{'label': 'natural', 'score': 0.9978172183036804},
+{'label': 'positive', 'score': 0.0014792329166084528},
+{'label': 'negative', 'score': 0.0007035882445052266}]]
+
+>>>  sentiment_analysis('קפה זה טעים')
+[[{'label': 'natural', 'score': 0.00047328314394690096},
+{'label': 'possitive', 'score': 0.9994067549705505},
+{'label': 'negetive', 'score': 0.00011996887042187154}]]
+
+>>>  sentiment_analysis('אני לא אוהב את העולם')
+[[{'label': 'natural', 'score': 9.214012970915064e-05}, 
+{'label': 'possitive', 'score': 8.876807987689972e-05}, 
+{'label': 'negetive', 'score': 0.9998190999031067}]]
+```
+
+**Let's discuss the results:**
+
+**Sentiment on Source Data:**
+
+| Group | Positive | Negative  | Neutral  |  
+|-------|----------|-----------|----------|
+| A     | 5.56 %   | 88.36 %   | 6.08 %   |
+| B     | 5.1 %    | 90.5 %    | 4.4 %    |
+| C     | 5.08 %   | 88.64 %   | 6.28 %   | 
+
+**Sentiment on Data Without Real Names:**
+
+| Group | Positive | Negative | Neutral |  
+|-------|----------|----------|---------|
+| A     | 6.34 %   | 86.32 %  | 7.34 %  |
+| B     | 5.58 %   | 89 %     | 5.42 %  |
+| C     | 5.68 %   | 86.4 %   | 7.92 %  | 
+
+**Conclusion:**
+
+We can see that ignoring real names does not affect the classification much.
+
+Another conclusion is that the texts are very negative for the 3 groups.
+
+> **Sentiment Task Using 'AlephBertGimmel-Sentiment':**
+
+**Liav Ariel was Assigned to this task.**
+
+**Script path:** 
+
+1. './tag_with_ABG.py'
+
+**Output path:** 
+
+1. './output/tagged_ABG_15000_docs/tagged_with_ABG_A.xlsx'
+2. './output/tagged_ABG_15000_docs/tagged_with_ABG_B.xlsx'
+3. './output/tagged_ABG_15000_docs/tagged_with_ABG_C.xlsx'
+4. './output/tagged_ABG_15000_docs/result_ABG_A.json'
+5. './output/tagged_ABG_15000_docs/result_ABG_B.json'
+6. './output/tagged_ABG_15000_docs/result_ABG_C.json'
+7. './output/tagged_ABG_15000_without_names_docs/tagged_ABG_without_names_A.xlsx'
+8. './output/tagged_ABG_15000_without_names_docs/tagged_ABG_without_names_B.xlsx'
+9. './output/tagged_ABG_15000_without_names_docs/tagged_ABG_without_names_C.xlsx'
+10. './output/tagged_ABG_15000_without_names_docs/result_ABG_without_names_A.json'
+11. './output/tagged_ABG_15000_without_names_docs/result_ABG_without_names_B.json'
+12. './output/tagged_ABG_15000_without_names_docs/result_ABG_without_names_C.json'
+
+I do the same as before, just now I work on hebrew data with AlephBertGimmel-Sentiment pre-trained model.
+First, on the source data.
+Second, on the data without names.
+
+**Link for the model:**
+
+1. https://huggingface.co/Perlucidus/alephbertgimmel-base-sentiment
+
+**How to Use:**
+
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+# Load tokenizer and model
+tokenizer = AutoTokenizer.from_pretrained("Perlucidus/alephbertgimmel-base-sentiment")
+model = AutoModelForSequenceClassification.from_pretrained("Perlucidus/alephbertgimmel-base-sentiment")
+
+# Tokenize the text
+text = "This is a great movie!"
+inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+
+# Perform forward pass to get the logits
+outputs = model(**inputs)
+
+# Convert logits to probabilities
+probs = outputs['logits'].softmax(dim=-1)
+
+# Get the predicted sentiment label
+predicted_label = probs.argmax().item()
+
+# Define the mapping of sentiment labels
+sentiment_labels = {0: 'Negative', 1: 'Neutral', 2: 'Positive'}
+
+# Print the sentiment label
+print(sentiment_labels[predicted_label])
+```
+
+**Let's discuss the results:**
+
+**Sentiment on Source Data:**
+
+| Group | Positive | Negative | Neutral |  
+|-------|----------|----------|---------|
+| A     | 0 %      | 24.44 %  | 75.56 % |
+| B     | 0 %      | 25.92 %  | 74.08 % |
+| C     | 0 %      | 30.12 %  | 69.88 % | 
+
+**Sentiment on Data Without Real Names:**
+
+| Group | Positive | Negative | Neutral |  
+|-------|----------|----------|---------|
+| A     | 0 %      | 26.54 %  | 73.46 % |
+| B     | 0 %      | 27.92 %  | 72.08 % |
+| C     | 0 %      | 30.62 %  | 69.38 % | 
+
+**Conclusion:**
+
+Something about this model isn't well-trained, but it's the only model I found in Hugging Face. 
+
+It was also very strange to discover that there was no 'model card' on it and only a link to download the model. 
+
+The results are quite delusional. 
+
+As far as I'm concerned, he didn't succeed. 
+
+But he did manage to show that there is no fundamental difference if real names are removed or replaced with random names. 
+
+The results are still the same.
