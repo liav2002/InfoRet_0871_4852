@@ -53,7 +53,7 @@ def main():
         group_id = file_path.split('_')[-1][0]
         result_dict = {'Positive': 0, 'Negative': 0, 'Neutral': 0}
         output_file_path = process_excel_file(file_path, result_dict)
-        with open(f"./output/tagged_translated_15000_docs/result_{group_id}.json", 'w') as json_file:
+        with open(f"./output/tagged_translated_15000_docs/result_translated_{group_id}.json", 'w') as json_file:
             json.dump(result_dict, json_file)
 
     print("Sentiment analysis completed for all files.")
