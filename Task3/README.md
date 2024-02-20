@@ -43,9 +43,11 @@ Now, you can read about how we have done every thing step by step:
 
 We worked on Google Colab in this task.
 
-**Link for the notebook:**
+But we have grouped the main parts of the code into one Python file.
 
-1. Todo: insert here
+**Script path:**
+
+1. ./translate_data.py
 
 **Output path:**
 
