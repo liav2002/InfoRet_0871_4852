@@ -258,13 +258,19 @@ I save the result output here:
 
 | Group | Positive | Negative | Neutral |
 |-------|----------|----------|---------|
-| A     |          |          |         |
-| B     |          |          |         |
-| C     |          |          |         | 
+| A     | 56.2 %   | 32.98 %  | 10.82 % |
+| B     | 52.26 %  | 36.6 %   | 11.14 % |
+| C     | 48.62 %  | 37.5 %   | 13.88 % | 
 
 **Conclusion:**
 
+It didn't improve by much, but it did improve a bit. 
 
+Maybe if we take the optimal thresholds we will get even better results. 
+
+Or maybe the premise that translation preserves semantics is wrong.
+
+But according to these results, it seems that the percentage of positive texts is greater.
 
 > **Sentiment Task Using 'heBert-Sentiment':**
 
@@ -353,6 +359,8 @@ sentiment_analysis = pipeline(
 We can see that ignoring real names does not affect the classification much.
 
 Another conclusion is that the texts are very negative for the 3 groups.
+
+The conclusion this time matches my expectations based on familiarity with the texts.
 
 > **Sentiment Task Using 'AlephBertGimmel-Sentiment':**
 
