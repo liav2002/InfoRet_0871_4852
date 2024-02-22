@@ -428,30 +428,20 @@ print(sentiment_labels[predicted_label])
 
 **Sentiment on Source Data:**
 
-| Group | Positive | Negative | Neutral |  
-|-------|----------|----------|---------|
-| A     | 0 %      | 24.44 %  | 75.56 % |
-| B     | 0 %      | 25.92 %  | 74.08 % |
-| C     | 0 %      | 30.12 %  | 69.88 % | 
+| Group  | Positive | Negative | 
+|--------|----------|----------|
+| A      | 24.44  % | 75.56 %  | 
+| B      | 39.92 %  | 74.08 %  |
+| C      | 30.12 %  | 69.88 %  | 
 
 **Sentiment on Data Without Real Names:**
 
-| Group | Positive | Negative | Neutral |  
-|-------|----------|----------|---------|
-| A     | 0 %      | 26.54 %  | 73.46 % |
-| B     | 0 %      | 27.92 %  | 72.08 % |
-| C     | 0 %      | 30.62 %  | 69.38 % | 
+| Group | Positive | Negative | 
+|-------|----------|----------|
+| A     | 26.54 %  | 73.46 %  | 
+| B     | 27.92 %  | 72.08 %  | 
+| C     | 30.62 %  | 69.38 %  | 
 
 **Conclusion:**
 
-Something about this model isn't well-trained, but it's the only model I found in Hugging Face. 
-
-It was also very strange to discover that there was no 'model card' on it and only a link to download the model. 
-
-The results are quite delusional. 
-
-As far as I'm concerned, he didn't succeed. 
-
-But he did manage to show that there is no fundamental difference if real names are removed or replaced with random names. 
-
-The results are still the same.
+Also, there is more negative than positive. and NER doesn't affect so much.
