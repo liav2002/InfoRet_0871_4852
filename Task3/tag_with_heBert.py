@@ -2,7 +2,6 @@ import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from tqdm import tqdm
 import json
-from HeBERT.src.HebEMO import *
 from transformers import AutoTokenizer, AutoModel, pipeline
 
 
