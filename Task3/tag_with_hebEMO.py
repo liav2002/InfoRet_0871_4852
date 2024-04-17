@@ -1,7 +1,9 @@
 import pandas as pd
 import json
 from transformers import AutoTokenizer, AutoModel, pipeline
+from HeBERT.src.HebEMO import *
 
+HebEMO_model = HebEMO()
 
 
 def analyze_sentiment_3(input_file, output_file, sentiment_analysis, n):
@@ -69,6 +71,74 @@ def create_sentiment_analysis():
     return sentiment_analysis
 
 
+def get_scores_from_hebEmo(content):
+    hebEmotion_df = HebEMO_model.hebemo(text=content)
+
+    pos_scores = [hebEmotion_df['anticipation'].values[0], hebEmotion_df['joy'].values[0],
+                  hebEmotion_df['trust'].values[0],
+                  hebEmotion_df['surprise'].values[0]]
+    neg_scores = [hebEmotion_df['fear'].values[0], hebEmotion_df['anger'].values[0], hebEmotion_df['sadness'].values[0],
+                  hebEmotion_df['disgust'].values[0]]
+
+    pos = sum(pos_scores) / len(pos_scores)
+    neg = sum(neg_scores) / len(neg_scores)
+
+    relative_pos_score = pos / (pos + neg)
+    relative_neg_score = neg / (pos + neg)
+
+    return relative_pos_score, relative_neg_score
+
+
+def analayze_with_hebEMO(input_file, output_file, n):
+    # Read the Excel file into a pandas DataFrame
+    df = pd.read_excel(input_file)
+
+    # Drop the first column
+    df = df.drop(columns=['No.'])
+
+    # Initialize lists to store sentiment scores
+    positive_scores = []
+    negative_scores = []
+
+    # Perform sentiment analysis on the 'content' column for the first n rows
+    for i in range(min(n, len(df))):
+        content = df.loc[i, 'content']
+        # Check if the content exceeds the maximum input length
+        max_length = 512  # Example: Maximum input length for BERT-base
+        if len(content) > max_length:
+            # Truncate the content if it's too long
+            content = content[:max_length]
+        # Perform sentiment analysis on the truncated content
+        positive_score, negative_score = get_scores_from_hebEmo(content)
+        # Append scores to the lists
+        negative_scores.append(negative_score)
+        positive_scores.append(positive_score)
+
+    # Determine the dominant sentiment for each row
+    sentiments = []
+    for i in range(min(n, len(df))):
+        pos_score = positive_scores[i]
+        neg_score = negative_scores[i]
+        if pos_score > neg_score:
+            sentiment = "Positive"
+        else:
+            sentiment = "Negative"
+        sentiments.append(sentiment)
+
+    # Create a DataFrame with 'file_id', 'content', sentiment scores, and sentiment
+    result_df = pd.DataFrame({
+        'file_id': df['file_id'].head(n),
+        'content': df['content'].head(n),
+        'Pos_score': positive_scores,
+        'Neg_score': negative_scores,
+        'Sentiment': sentiments
+    })
+
+    # Save the DataFrame to a new Excel file
+    result_df.to_excel(output_file, index=False)
+    print(f"Results saved to {output_file}")
+
+
 def count_sentiments(input_file, output_file):
     # Read the Excel file into a pandas DataFrame
     df = pd.read_excel(input_file)
@@ -87,13 +157,14 @@ def count_sentiments(input_file, output_file):
 
 
 def main():
-    sentiment_analysis = create_sentiment_analysis()
-    analyze_sentiment_3("./data/15000_docs/original_A.xlsx",
-                        "./output/tagged_hebEMO_15000_docs/tagged_with_hebEMO_A.xlsx", sentiment_analysis, 5000)
-    analyze_sentiment_3("./data/15000_docs/original_B.xlsx",
-                        "./output/tagged_hebEMO_15000_docs/tagged_with_hebEMO_B.xlsx", sentiment_analysis, 5000)
-    analyze_sentiment_3("./data/15000_docs/original_C.xlsx",
-                        "./output/tagged_hebEMO_15000_docs/tagged_with_hebEMO_C.xlsx", sentiment_analysis, 5000)
+    # sentiment_analysis = create_sentiment_analysis()
+
+    analayze_with_hebEMO("./data/15000_docs/original_A.xlsx",
+                        "./output/tagged_hebEMO_15000_docs/tagged_with_hebEMO_A.xlsx", 5000)
+    analayze_with_hebEMO("./data/15000_docs/original_B.xlsx",
+                        "./output/tagged_hebEMO_15000_docs/tagged_with_hebEMO_B.xlsx", 5000)
+    analayze_with_hebEMO("./data/15000_docs/original_C.xlsx",
+                        "./output/tagged_hebEMO_15000_docs/tagged_with_hebEMO_C.xlsx", 5000)
 
     count_sentiments("./output/tagged_hebEMO_15000_docs/tagged_with_hebEMO_A.xlsx",
                      "./output/tagged_hebEMO_15000_docs/result_hebEMO_A.json")
@@ -102,15 +173,12 @@ def main():
     count_sentiments("./output/tagged_hebEMO_15000_docs/tagged_with_hebEMO_C.xlsx",
                      "./output/tagged_hebEMO_15000_docs/result_hebEMO_C.json")
 
-    analyze_sentiment_3("./data/cleaned_from_names_15000_docs/without_names_A.xlsx",
-                        "./output/tagged_hebEMO_15000_without_names_docs/tagged_hebEMO_without_names_A.xlsx",
-                        sentiment_analysis, 5000)
-    analyze_sentiment_3("./data/cleaned_from_names_15000_docs/without_names_B.xlsx",
-                        "./output/tagged_hebEMO_15000_without_names_docs/tagged_hebEMO_without_names_B.xlsx",
-                        sentiment_analysis, 5000)
-    analyze_sentiment_3("./data/cleaned_from_names_15000_docs/without_names_C.xlsx",
-                        "./output/tagged_hebEMO_15000_without_names_docs/tagged_hebEMO_without_names_C.xlsx",
-                        sentiment_analysis, 5000)
+    analayze_with_hebEMO("./data/cleaned_from_names_15000_docs/without_names_A.xlsx",
+                        "./output/tagged_hebEMO_15000_without_names_docs/tagged_hebEMO_without_names_A.xlsx", 5000)
+    analayze_with_hebEMO("./data/cleaned_from_names_15000_docs/without_names_B.xlsx",
+                        "./output/tagged_hebEMO_15000_without_names_docs/tagged_hebEMO_without_names_B.xlsx", 5000)
+    analayze_with_hebEMO("./data/cleaned_from_names_15000_docs/without_names_C.xlsx",
+                        "./output/tagged_hebEMO_15000_without_names_docs/tagged_hebEMO_without_names_C.xlsx", 5000)
 
     count_sentiments("./output/tagged_hebEMO_15000_without_names_docs/tagged_hebEMO_without_names_A.xlsx",
                      "./output/tagged_hebEMO_15000_without_names_docs/result_hebEMO_without_names_A.json")
