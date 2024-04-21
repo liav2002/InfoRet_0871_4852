@@ -243,6 +243,7 @@ class NB_C:
 class LogisticRegression_C:
     def __init__(self, output_folder):
         self.output_folder = output_folder
+        self.selected_features = []
 
     def evaluate_and_save_results(self, model, test_data, test_labels, pair_name):
         print("Evaluate results:")
@@ -264,6 +265,12 @@ class LogisticRegression_C:
         with open(result_path, 'w') as json_file:
             json.dump(result, json_file)
         print(f"Evaluate result saved in: {result_path}")
+
+        # Save selected features to JSON file
+        features_path = os.path.join(self.output_folder, f'features_{pair_name}.json')
+        with open(features_path, 'w') as json_file:
+            json.dump(self.selected_features, json_file)
+        print(f"Selected features saved in: {features_path}")
 
         # Visualize in UMAP
         umap = TSNE(n_components=2, random_state=42)
@@ -296,6 +303,9 @@ class LogisticRegression_C:
         print("Training model...")
         model.fit(train_vectors, train_labels)
         print("Model training finished.")
+
+        # Store selected features
+        self.selected_features = model.coef_[0].tolist()
 
         # Evaluate and save results
         self.evaluate_and_save_results(model, test_vectors, test_labels, pair_name)
@@ -332,7 +342,7 @@ def create_output_for_groups(group1_path, group2_path, group3_path, output_folde
         elif alg[0] == ALG["LogisticRegression"]:
             lr = LogisticRegression_C(output_folder=output_folder)
             lr.run_experiment(vectors1, vectors2, pair_describe)
-
+            print(f"Selected features for pair {pair_describe}: {lr.selected_features}")
 
 def ann_output():
     # ANN
@@ -423,22 +433,22 @@ def naive_bayes_output():
 
 
 def logistic_regression_output():
-    # Logistic Regression
-    print("Clustering Matrices using Logistic Regression...\n")
+    # # Logistic Regression
+    # print("Clustering Matrices using Logistic Regression...\n")
 
-    # Logistic Regression for bert_on_source vectors
-    print("Create output for 'Bert_On_Source' doc vectors.")
-    create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
-                             group3_path=BERT_SOURCE_C_VECTORS,
-                             output_folder=LogisticRegression_BERT_SOURCE_OUTPUT_FOLDER,
-                             alg=[ALG["LogisticRegression"]])
+    # # Logistic Regression for bert_on_source vectors
+    # print("Create output for 'Bert_On_Source' doc vectors.")
+    # create_output_for_groups(group1_path=BERT_SOURCE_A_VECTORS, group2_path=BERT_SOURCE_B_VECTORS,
+    #                          group3_path=BERT_SOURCE_C_VECTORS,
+    #                          output_folder=LogisticRegression_BERT_SOURCE_OUTPUT_FOLDER,
+    #                          alg=[ALG["LogisticRegression"]])
 
-    # Logistic Regression for d2v_on_source vectors
-    print("Create output for 'D2V_On_Source' doc vectors.")
-    create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
-                             group3_path=D2V_SOURCE_C_VECTORS,
-                             output_folder=LogisticRegression_D2V_SOURCE_OUTPUT_FOLDER,
-                             alg=[ALG["LogisticRegression"]])
+    # # Logistic Regression for d2v_on_source vectors
+    # print("Create output for 'D2V_On_Source' doc vectors.")
+    # create_output_for_groups(group1_path=D2V_SOURCE_A_VECTORS, group2_path=D2V_SOURCE_B_VECTORS,
+    #                          group3_path=D2V_SOURCE_C_VECTORS,
+    #                          output_folder=LogisticRegression_D2V_SOURCE_OUTPUT_FOLDER,
+    #                          alg=[ALG["LogisticRegression"]])
 
     # Logistic Regression for tfidf_on_lemots vectors
     print("Create output for 'TFIDF_On_Lemots' doc vectors.")
@@ -447,34 +457,34 @@ def logistic_regression_output():
                              output_folder=LogisticRegression_TFIDF_LEMOTS_OUTPUT_FOLDER,
                              alg=[ALG["LogisticRegression"]])
 
-    # Logistic Regression for tfidf_on_words vectors
-    print("Create output for 'TFIDF_On_Words' doc vectors.")
-    create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
-                             group3_path=TFIDF_WORDS_C_VECTORS,
-                             output_folder=LogisticRegression_TFIDF_WORDS_OUTPUT_FOLDER,
-                             alg=[ALG["LogisticRegression"]])
+    # # Logistic Regression for tfidf_on_words vectors
+    # print("Create output for 'TFIDF_On_Words' doc vectors.")
+    # create_output_for_groups(group1_path=TFIDF_WORDS_A_VECTORS, group2_path=TFIDF_WORDS_B_VECTORS,
+    #                          group3_path=TFIDF_WORDS_C_VECTORS,
+    #                          output_folder=LogisticRegression_TFIDF_WORDS_OUTPUT_FOLDER,
+    #                          alg=[ALG["LogisticRegression"]])
 
-    # Logistic Regression for w2v_on_lemots vectors
-    print("Create output for 'W2V_On_Lemots' doc vectors.")
-    create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
-                             group3_path=W2V_LEMOTS_C_VECTORS,
-                             output_folder=LogisticRegression_W2V_LEMOTS_OUTPUT_FOLDER,
-                             alg=[ALG["LogisticRegression"]])
-
-    # Logistic Regression for w2v_on_words vectors
-    print("Create output for 'W2V_On_Words' doc vectors.")
-    create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
-                             group3_path=W2V_WORDS_C_VECTORS,
-                             output_folder=LogisticRegression_W2V_WORDS_OUTPUT_FOLDER,
-                             alg=[ALG["LogisticRegression"]])
+    # # Logistic Regression for w2v_on_lemots vectors
+    # print("Create output for 'W2V_On_Lemots' doc vectors.")
+    # create_output_for_groups(group1_path=W2V_LEMOTS_A_VECTORS, group2_path=W2V_LEMOTS_B_VECTORS,
+    #                          group3_path=W2V_LEMOTS_C_VECTORS,
+    #                          output_folder=LogisticRegression_W2V_LEMOTS_OUTPUT_FOLDER,
+    #                          alg=[ALG["LogisticRegression"]])
+    #
+    # # Logistic Regression for w2v_on_words vectors
+    # print("Create output for 'W2V_On_Words' doc vectors.")
+    # create_output_for_groups(group1_path=W2V_WORDS_A_VECTORS, group2_path=W2V_WORDS_B_VECTORS,
+    #                          group3_path=W2V_WORDS_C_VECTORS,
+    #                          output_folder=LogisticRegression_W2V_WORDS_OUTPUT_FOLDER,
+    #                          alg=[ALG["LogisticRegression"]])
 
 
 def main():
-    # ANN Clustering
-    ann_output()
-
-    # Naive Bayes Clustering
-    naive_bayes_output()
+    # # ANN Clustering
+    # ann_output()
+    #
+    # # Naive Bayes Clustering
+    # naive_bayes_output()
 
     # Logistic Regression Clustering
     logistic_regression_output()
