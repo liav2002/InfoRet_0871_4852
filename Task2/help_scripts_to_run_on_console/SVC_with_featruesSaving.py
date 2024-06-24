@@ -2,15 +2,56 @@
 TFIDF_LEMOTS_A_VECTORS = "./Task2/data/tfidf_on_lemots/tfidf_lemots_A_docvec.xlsx"
 TFIDF_LEMOTS_B_VECTORS = "./Task2/data/tfidf_on_lemots/tfidf_lemots_B_docvec.xlsx"
 TFIDF_LEMOTS_C_VECTORS = "./Task2/data/tfidf_on_lemots/tfidf_lemots_C_docvec.xlsx"
-SVC_TFIDF_LEMOTS_OUTPUT_FOLDER = "./Task2/output/SVC/TFIDF_On_Lemots_Groups/"
+SVC_TFIDF_LEMOTS_OUTPUT_FOLDER = "./Task2/output4dror/SVM/Iteration2/"
+IterationNum = "SVM2"
+
+# Get Vectors Function
+import pandas as pd
+def get_vectors_from(file_path):
+    df = pd.read_excel(file_path, header=None)
+    return [list(df.iloc[i][1:]) for i in range(1, df.shape[0])]
 
 # Use Get Vectors Function to Retrieve the vectors for 3 groups of data
 vectors_A = get_vectors_from(TFIDF_LEMOTS_A_VECTORS)
 vectors_B = get_vectors_from(TFIDF_LEMOTS_B_VECTORS)
 vectors_C = get_vectors_from(TFIDF_LEMOTS_C_VECTORS)
 
+# Get Feature Function
+def get_features_names_form(file_path):
+    try:
+        # Read the Excel file
+        df = pd.read_excel(file_path, header=None)
+        # Extract feature names from the first row
+        feature_names = list(df.iloc[0, 1:])
+        return feature_names
+    except Exception as e:
+        print(f"Error occurred while reading file: {e}")
+        return None
+        
 # Use Get Feature Function to extract the features names
 features_names = get_features_names_form(TFIDF_LEMOTS_A_VECTORS)
+
+# Function to remove features
+def remove_features_from(vectors, features_names, features2remove):
+    # Create a dictionary mapping feature names to their indices
+    feature_index_map = {feature: index for index, feature in enumerate(features_names)}
+
+    # Iterate through each vector
+    for vector in vectors:
+        # Iterate through features to remove
+        for feature in features2remove:
+            # Check if the feature exists in the vector
+            if feature in feature_index_map:
+                # Set the value of the feature to 0
+                index = feature_index_map[feature]
+                vector[index] = 0
+
+# Remove Feartures
+filtered_features = []
+vectors_A = remove_features_from(vectors_A, features_names, filtered_features)
+vectors_B = remove_features_from(vectors_B, features_names, filtered_features)
+vectors_C = remove_features_from(vectors_C, features_names, filtered_features)
+
 
 # Intialize vectors stack of two groups (group1 & group2)
 import numpy as np
@@ -51,7 +92,7 @@ result = {
     'recall': recall,
     'f1': f1
 }
-result_path = os.path.join(SVC_TFIDF_LEMOTS_OUTPUT_FOLDER, f'result_{pair_name}.json')
+result_path = os.path.join(SVC_TFIDF_LEMOTS_OUTPUT_FOLDER, f'result_{pair_name}-{IterationNum}.json')
 with open(result_path, 'w') as json_file:
     json.dump(result, json_file)
 print(f"Evaluate result saved in: {result_path}")
@@ -70,6 +111,7 @@ features_df = pd.DataFrame({'Positive Word': [pair[0] for pair in top_positive_f
                             'Negative Word': [pair[0] for pair in top_negative_features],
                             'Negative Weight': [pair[1] for pair in top_negative_features]})
 
-features_path = os.path.join(SVC_TFIDF_LEMOTS_OUTPUT_FOLDER, f'features_{pair_name}.xlsx')
+features_path = os.path.join(SVC_TFIDF_LEMOTS_OUTPUT_FOLDER, f'features_{pair_name}-{IterationNum}.xlsx')
 features_df.to_excel(features_path, index=False)
 print(f"Selected features saved in: {features_path}")
+

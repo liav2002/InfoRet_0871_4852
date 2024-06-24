@@ -2,7 +2,8 @@
 TFIDF_LEMOTS_A_VECTORS = "./Task2/data/tfidf_on_lemots/tfidf_lemots_A_docvec.xlsx"
 TFIDF_LEMOTS_B_VECTORS = "./Task2/data/tfidf_on_lemots/tfidf_lemots_B_docvec.xlsx"
 TFIDF_LEMOTS_C_VECTORS = "./Task2/data/tfidf_on_lemots/tfidf_lemots_C_docvec.xlsx"
-LogisticRegression_TFIDF_LEMOTS_OUTPUT_FOLDER = "./Task2/output/LogisticRegression/TFIDF_On_Lemots_Groups/"
+LogisticRegression_TFIDF_LEMOTS_OUTPUT_FOLDER = "./Task2/output4dror/LoR/Iteration2/"
+IterationNum = "LoR2"
 
 # Get Vectors Function
 import pandas as pd
@@ -29,6 +30,29 @@ def get_features_names_form(file_path):
 
 # Use Get Feature Function to extract the features names
 features_names = get_features_names_form(TFIDF_LEMOTS_A_VECTORS)
+
+# Function to remove features
+def remove_features_from(vectors, features_names, features2remove):
+    # Create a dictionary mapping feature names to their indices
+    feature_index_map = {feature: index for index, feature in enumerate(features_names)}
+
+    # Iterate through each vector
+    for vector in vectors:
+        # Iterate through features to remove
+        for feature in features2remove:
+            # Check if the feature exists in the vector
+            if feature in feature_index_map:
+                # Set the value of the feature to 0
+                index = feature_index_map[feature]
+                vector[index] = 0
+
+    return vectors
+    
+# Remove Feartures
+filtered_features = []
+vectors_A = remove_features_from(vectors_A, features_names, filtered_features)
+vectors_B = remove_features_from(vectors_B, features_names, filtered_features)
+vectors_C = remove_features_from(vectors_C, features_names, filtered_features)
 
 # Intialize vectors stack of two groups (group1 & group2)
 import numpy as np
@@ -69,7 +93,7 @@ result = {
     'recall': recall,
     'f1': f1
 }
-result_path = os.path.join(LogisticRegression_TFIDF_LEMOTS_OUTPUT_FOLDER, f'result_{pair_name}.json')
+result_path = os.path.join(LogisticRegression_TFIDF_LEMOTS_OUTPUT_FOLDER, f'result_{pair_name}-{IterationNum}.json')
 with open(result_path, 'w') as json_file:
     json.dump(result, json_file)
 print(f"Evaluate result saved in: {result_path}")
@@ -88,6 +112,6 @@ features_df = pd.DataFrame({'Positive Word': [pair[0] for pair in top_positive_f
                             'Negative Word': [pair[0] for pair in top_negative_features],
                             'Negative Weight': [pair[1] for pair in top_negative_features]})
 
-features_path = os.path.join(LogisticRegression_TFIDF_LEMOTS_OUTPUT_FOLDER, f'features_{pair_name}.xlsx')
+features_path = os.path.join(LogisticRegression_TFIDF_LEMOTS_OUTPUT_FOLDER, f'features_{pair_name}-{IterationNum}.xlsx')
 features_df.to_excel(features_path, index=False)
 print(f"Selected features saved in: {features_path}")
